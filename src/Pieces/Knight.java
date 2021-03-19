@@ -1,5 +1,6 @@
 package Pieces;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import Chess.Board;
@@ -7,8 +8,8 @@ import Chess.Pathing;
 
 public class Knight extends Piece {
 
-	private ArrayList<ArrayList<Integer>> potentialMoves = new ArrayList<ArrayList<Integer>>();
-	private ArrayList<ArrayList<Integer>> allowableMoves = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<Point> potentialMoves = new ArrayList<Point>();
+	private ArrayList<Point> allowableMoves = new ArrayList<Point>();
 
 	public Knight(int x, int y, int player) {
 		super.x = x;
@@ -27,33 +28,33 @@ public class Knight extends Piece {
 
 	private void setPotentialMoves() {
 		if (x - 2 > -1 && x - 2 < 8 && y + 1 > -1 && y + 1 < 8) {
-			potentialMoves.add(getArrayListCoords(x - 2, y + 1));
+			potentialMoves.add(new Point(x - 2, y + 1));
 		}
 		if (x - 1 > -1 && x - 1 < 8 && y + 2 > -1 && y + 2 < 8) {
-			potentialMoves.add(getArrayListCoords(x - 1, y + 2));
+			potentialMoves.add(new Point(x - 1, y + 2));
 		}
 		if (x + 1 > -1 && x + 1 < 8 && y + 2 > -1 && y + 2 < 8) {
-			potentialMoves.add(getArrayListCoords(x + 1, y + 2));
+			potentialMoves.add(new Point(x + 1, y + 2));
 		}
 		if (x + 2 > -1 && x + 2 < 8 && y + 1 > -1 && y + 1 < 8) {
-			potentialMoves.add(getArrayListCoords(x + 2, y + 1));
+			potentialMoves.add(new Point(x + 2, y + 1));
 		}
 		if (x + 2 > -1 && x + 2 < 8 && y - 1 > -1 && y - 1 < 8) {
-			potentialMoves.add(getArrayListCoords(x + 2, y - 1));
+			potentialMoves.add(new Point(x + 2, y - 1));
 		}
 		if (x + 1 > -1 && x + 1 < 8 && y - 2 > -1 && y - 2 < 8) {
-			potentialMoves.add(getArrayListCoords(x + 1, y - 2));
+			potentialMoves.add(new Point(x + 1, y - 2));
 		}
 		if (x - 1 > -1 && x - 1 < 8 && y - 2 > -1 && y - 2 < 8) {
-			potentialMoves.add(getArrayListCoords(x - 1, y - 2));
+			potentialMoves.add(new Point(x - 1, y - 2));
 		}
 		if (x - 2 > -1 && x - 2 < 8 && y - 1 > -1 && y - 1 < 8) {
-			potentialMoves.add(getArrayListCoords(x - 2, y - 1));
+			potentialMoves.add(new Point(x - 2, y - 1));
 		}
 
 	}
 
-	public ArrayList<ArrayList<Integer>> getPossibleMoves(boolean checkForKingCheck, Board board) {
+	public ArrayList<Point> getPossibleMoves(boolean checkForKingCheck, Board board) {
 		allowableMoves = Pathing.getAllowableKnightMoves(potentialMoves, player, board);
 
 		if (checkForKingCheck == true) {
@@ -64,11 +65,11 @@ public class Knight extends Piece {
 		return allowableMoves;
 	}
 
-	public ArrayList<ArrayList<Integer>> getDangerousMoves(Board board) {
+	public ArrayList<Point> getDangerousMoves(Board board) {
 		return potentialMoves;
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialDangerousMoves(Board board) {
+	public ArrayList<Point> getPotentialDangerousMoves(Board board) {
 		return potentialMoves;
 	}
 

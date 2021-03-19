@@ -1,5 +1,6 @@
 package Pieces;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import Chess.Board;
@@ -21,8 +22,8 @@ public class Bishop extends Piece {
 		}
 	}
 
-	public ArrayList<ArrayList<Integer>> getPossibleMoves(boolean checkForKingCheck, Board board) {
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<Point> getPossibleMoves(boolean checkForKingCheck, Board board) {
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		allowableCoords = Pathing.getAllowableDiagonalMoves(x, y, player, true, board);
 
@@ -35,11 +36,11 @@ public class Bishop extends Piece {
 		return allowableCoords;
 	}
 
-	public ArrayList<ArrayList<Integer>> getDangerousMoves(Board board) {
+	public ArrayList<Point> getDangerousMoves(Board board) {
 		return Pathing.getPotentialDiagonalMoves(x, y, true, true, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialDangerousMoves(Board board) {
+	public ArrayList<Point> getPotentialDangerousMoves(Board board) {
 		return Pathing.getPotentialDiagonalMoves(x, y, true, false, board);
 	}
 	
@@ -47,19 +48,19 @@ public class Bishop extends Piece {
 	 * being vulnerable from an opponent's piece
 	 */
 
-	public ArrayList<ArrayList<Integer>> getPotentialDiagonalLeftMoves(Board board) {
+	public ArrayList<Point> getPotentialDiagonalLeftMoves(Board board) {
 		return Pathing.getPotentialDiagonalLeftMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialDiagonalRightMoves(Board board) {
+	public ArrayList<Point> getPotentialDiagonalRightMoves(Board board) {
 		return Pathing.getPotentialDiagonalRightMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialAntiDiagonalLeftMoves(Board board) {
+	public ArrayList<Point> getPotentialAntiDiagonalLeftMoves(Board board) {
 		return Pathing.getPotentialAntiDiagonalLeftMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialAntiDiagonalRightMoves(Board board) {
+	public ArrayList<Point> getPotentialAntiDiagonalRightMoves(Board board) {
 		return Pathing.getPotentialAntiDiagonalRightMoves(x, y, true, false, board);
 	}
 

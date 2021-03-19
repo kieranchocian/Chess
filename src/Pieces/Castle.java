@@ -1,5 +1,6 @@
 package Pieces;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import Chess.Board;
@@ -21,8 +22,8 @@ public class Castle extends Piece {
 		}
 	}
 
-	public ArrayList<ArrayList<Integer>> getPossibleMoves(boolean checkForKingCheck, Board board) {
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<Point> getPossibleMoves(boolean checkForKingCheck, Board board) {
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		allowableCoords = Pathing.getAllowableVerticalAndHorizontalMoves(x, y, player, true, board);
 
@@ -35,11 +36,11 @@ public class Castle extends Piece {
 		return allowableCoords;
 	}
 
-	public ArrayList<ArrayList<Integer>> getDangerousMoves(Board board) {
+	public ArrayList<Point> getDangerousMoves(Board board) {
 		return Pathing.getPotentialVerticleAndHorizontalMoves(x, y, true, true, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialDangerousMoves(Board board) {
+	public ArrayList<Point> getPotentialDangerousMoves(Board board) {
 		return Pathing.getPotentialVerticleAndHorizontalMoves(x, y, true, false, board);
 	}
 	
@@ -47,19 +48,19 @@ public class Castle extends Piece {
 	 * being vulnerable from an opponent's piece
 	 */
 
-	public ArrayList<ArrayList<Integer>> getPotentialHorizontalLeftMoves(Board board) {
+	public ArrayList<Point> getPotentialHorizontalLeftMoves(Board board) {
 		return Pathing.getPotentialHorizontalLeftMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialHorizontalRightMoves(Board board) {
+	public ArrayList<Point> getPotentialHorizontalRightMoves(Board board) {
 		return Pathing.getPotentialHorizontalRightMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialVerticalUpMoves(Board board) {
+	public ArrayList<Point> getPotentialVerticalUpMoves(Board board) {
 		return Pathing.getPotentialVerticalUpMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialVerticalDownMoves(Board board) {
+	public ArrayList<Point> getPotentialVerticalDownMoves(Board board) {
 		return Pathing.getPotentialVerticalDownMoves(x, y, true, false, board);
 	}
 

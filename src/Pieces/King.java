@@ -1,5 +1,6 @@
 package Pieces;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import Chess.Board;
@@ -21,8 +22,8 @@ public class King extends Piece {
 		}
 	}
 
-	public ArrayList<ArrayList<Integer>> getPossibleMoves(boolean checkForKingCheck, Board board) {
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<Point> getPossibleMoves(boolean checkForKingCheck, Board board) {
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		allowableCoords = Pathing.getAllowableDiagonalMoves(x, y, player, false, board);
 		allowableCoords.addAll(Pathing.getAllowableVerticalAndHorizontalMoves(x, y, player, false, board));
@@ -38,16 +39,16 @@ public class King extends Piece {
 		return allowableCoords;
 	}
 
-	public ArrayList<ArrayList<Integer>> getDangerousMoves(Board board) {
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<Point> getDangerousMoves(Board board) {
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		potentialCoords = Pathing.getPotentialVerticleAndHorizontalMoves(x, y, false, true, board);
 		potentialCoords.addAll(Pathing.getPotentialDiagonalMoves(x, y, false, true, board));
 		return potentialCoords;
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialDangerousMoves(Board board) {
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<Point> getPotentialDangerousMoves(Board board) {
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		potentialCoords = Pathing.getPotentialVerticleAndHorizontalMoves(x, y, false, false, board);
 		potentialCoords.addAll(Pathing.getPotentialDiagonalMoves(x, y, false, false, board));

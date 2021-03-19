@@ -1,5 +1,6 @@
 package Pieces;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import Chess.Board;
@@ -22,8 +23,8 @@ public class Queen extends Piece {
 
 	}
 
-	public ArrayList<ArrayList<Integer>> getPossibleMoves(boolean checkForKingCheck, Board board) {
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<Point> getPossibleMoves(boolean checkForKingCheck, Board board) {
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		allowableCoords = Pathing.getAllowableDiagonalMoves(x, y, player, true, board);
 		allowableCoords.addAll(Pathing.getAllowableVerticalAndHorizontalMoves(x, y, player, true, board));
@@ -35,16 +36,16 @@ public class Queen extends Piece {
 		return allowableCoords;
 	}
 
-	public ArrayList<ArrayList<Integer>> getDangerousMoves(Board board) {
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<Point> getDangerousMoves(Board board) {
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		potentialCoords = Pathing.getPotentialVerticleAndHorizontalMoves(x, y, true, true, board);
 		potentialCoords.addAll(Pathing.getPotentialDiagonalMoves(x, y, true, true, board));
 		return potentialCoords;
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialDangerousMoves(Board board) {
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<Point> getPotentialDangerousMoves(Board board) {
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		potentialCoords = Pathing.getPotentialVerticleAndHorizontalMoves(x, y, true, false, board);
 		potentialCoords.addAll(Pathing.getPotentialDiagonalMoves(x, y, true, false, board));
@@ -55,35 +56,35 @@ public class Queen extends Piece {
 	 * being vulnerable from an opponent's piece
 	 */
 
-	public ArrayList<ArrayList<Integer>> getPotentialDiagonalLeftMoves(Board board) {
+	public ArrayList<Point> getPotentialDiagonalLeftMoves(Board board) {
 		return Pathing.getPotentialDiagonalLeftMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialDiagonalRightMoves(Board board) {
+	public ArrayList<Point> getPotentialDiagonalRightMoves(Board board) {
 		return Pathing.getPotentialDiagonalRightMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialAntiDiagonalLeftMoves(Board board) {
+	public ArrayList<Point> getPotentialAntiDiagonalLeftMoves(Board board) {
 		return Pathing.getPotentialAntiDiagonalLeftMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialAntiDiagonalRightMoves(Board board) {
+	public ArrayList<Point> getPotentialAntiDiagonalRightMoves(Board board) {
 		return Pathing.getPotentialAntiDiagonalRightMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialHorizontalLeftMoves(Board board) {
+	public ArrayList<Point> getPotentialHorizontalLeftMoves(Board board) {
 		return Pathing.getPotentialHorizontalLeftMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialHorizontalRightMoves(Board board) {
+	public ArrayList<Point> getPotentialHorizontalRightMoves(Board board) {
 		return Pathing.getPotentialHorizontalRightMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialVerticalUpMoves(Board board) {
+	public ArrayList<Point> getPotentialVerticalUpMoves(Board board) {
 		return Pathing.getPotentialVerticalUpMoves(x, y, true, false, board);
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialVerticalDownMoves(Board board) {
+	public ArrayList<Point> getPotentialVerticalDownMoves(Board board) {
 		return Pathing.getPotentialVerticalDownMoves(x, y, true, false, board);
 	}
 

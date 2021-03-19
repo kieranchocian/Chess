@@ -1,6 +1,6 @@
 package Pieces;
 
-import java.util.ArrayList;
+import java.awt.Point;
 
 import Chess.Game;
 
@@ -24,15 +24,6 @@ public abstract class Piece {
 
 	public int getPlayer() {
 		return player;
-	}
-
-	protected ArrayList<Integer> getArrayListCoords(int x, int y) {
-		ArrayList<Integer> coords = new ArrayList<Integer>();
-		coords.add(x);
-		coords.add(y);
-		return coords;
-	}
-
-	
+	}	
 
 }

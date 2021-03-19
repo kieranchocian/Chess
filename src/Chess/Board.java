@@ -1,5 +1,6 @@
 package Chess;
 
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -13,8 +14,8 @@ import Pieces.Bishop;
 public class Board implements Serializable {
 
 	private ArrayList<ArrayList<Cell>> board = new ArrayList<ArrayList<Cell>>();
-	private ArrayList<Integer> playerOneKingCoords = new ArrayList<Integer>();
-	private ArrayList<Integer> playerTwoKingCoords = new ArrayList<Integer>();
+	private Point playerOneKingCoords = new Point();
+	private Point playerTwoKingCoords = new Point();
 
 	public Board() {
 		createBoard();
@@ -168,8 +169,8 @@ public class Board implements Serializable {
 	// adding dangerousCells and potentialDangerousCells to each cell in board
 	public void initialiseDangerousCells() {
 
-		ArrayList<ArrayList<Integer>> potentialEndangeredCells;
-		ArrayList<ArrayList<Integer>> endangeredCells;
+		ArrayList<Point> potentialEndangeredCells;
+		ArrayList<Point> endangeredCells;
 
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
@@ -282,12 +283,12 @@ public class Board implements Serializable {
 		return board.get(y).get(x).getPiece();
 	}
 
-	public ArrayList<ArrayList<Integer>> getPotentialDangerousCells(int x, int y) {
+	public ArrayList<Point> getPotentialDangerousCells(int x, int y) {
 		Cell test = board.get(y).get(x);
 		return test.getPotentialDangerousCells();
 	}
 
-	public ArrayList<ArrayList<Integer>> getDangerousCells(int x, int y) {
+	public ArrayList<Point> getDangerousCells(int x, int y) {
 		Cell test = board.get(y).get(x);
 		return test.getDangerousCells();
 	}
@@ -304,16 +305,16 @@ public class Board implements Serializable {
 
 	}
 
-	public void changeCell(int x, int y, int player, String piece, ArrayList<ArrayList<Integer>> potentialDangerousCell,
-			ArrayList<ArrayList<Integer>> dangerousCells) {
+	public void changeCell(int x, int y, int player, String piece, ArrayList<Point> potentialDangerousCell,
+			ArrayList<Point> dangerousCells) {
 
 		Cell cell = new Cell(x, y, player, piece, potentialDangerousCell, dangerousCells);
 		board.get(y).set(x, cell);
 
 	}
 
-	public void removeCell(int x, int y, ArrayList<ArrayList<Integer>> potentialDangerousCell,
-			ArrayList<ArrayList<Integer>> dangerousCells) {
+	public void removeCell(int x, int y, ArrayList<Point> potentialDangerousCell,
+			ArrayList<Point> dangerousCells) {
 
 		Cell emptyCell = new Cell(x, y, potentialDangerousCell, dangerousCells);
 		board.get(y).set(x, emptyCell);
@@ -335,71 +336,71 @@ public class Board implements Serializable {
 		board.get(y).get(x).removeDangerousCell(dangerousCellX, dangerousCellY);
 	}
 
-	public void addEndangeredCells(int x, int y, ArrayList<ArrayList<Integer>> endangeredCells) {
+	public void addEndangeredCells(int x, int y, ArrayList<Point> endangeredCells) {
 		for (int i = 0; i < endangeredCells.size(); i++) {
-			int potentialEndangeredCellX = endangeredCells.get(i).get(0);
-			int potentialEndangeredCellY = endangeredCells.get(i).get(1);
+			int potentialEndangeredCellX = endangeredCells.get(i).x;
+			int potentialEndangeredCellY = endangeredCells.get(i).y;
 			board.get(potentialEndangeredCellY).get(potentialEndangeredCellX).addDangerousCell(x, y);
 		}
 	}
 
-	public void addPotentialEndangeredCells(int x, int y, ArrayList<ArrayList<Integer>> potentialEndangeredCells) {
+	public void addPotentialEndangeredCells(int x, int y, ArrayList<Point> potentialEndangeredCells) {
 		for (int i = 0; i < potentialEndangeredCells.size(); i++) {
-			int potentialEndangeredCellX = potentialEndangeredCells.get(i).get(0);
-			int potentialEndangeredCellY = potentialEndangeredCells.get(i).get(1);
+			int potentialEndangeredCellX = potentialEndangeredCells.get(i).x;
+			int potentialEndangeredCellY = potentialEndangeredCells.get(i).y;
 			board.get(potentialEndangeredCellY).get(potentialEndangeredCellX).addPotentialDangerousCell(x, y);
 			// System.out.println("After adding " + i + ": Potential dangerous cells at
 			// coords (0, 2): " + Game.getBoard().getPotentialDangerousCells(0, 2));
 		}
 	}
 
-	public void removeEndangeredCells(int x, int y, ArrayList<ArrayList<Integer>> endangeredCells) {
+	public void removeEndangeredCells(int x, int y, ArrayList<Point> endangeredCells) {
 		for (int i = 0; i < endangeredCells.size(); i++) {
-			int endangeredCellX = endangeredCells.get(i).get(0);
-			int endangeredCellY = endangeredCells.get(i).get(1);
+			int endangeredCellX = endangeredCells.get(i).x;
+			int endangeredCellY = endangeredCells.get(i).y;
 			board.get(endangeredCellY).get(endangeredCellX).removeDangerousCell(x, y);
 		}
 	}
 
-	public void removePotentialEndangeredCells(int x, int y, ArrayList<ArrayList<Integer>> potentialEndangeredCells) {
+	public void removePotentialEndangeredCells(int x, int y, ArrayList<Point> potentialEndangeredCells) {
 		for (int i = 0; i < potentialEndangeredCells.size(); i++) {
-			int potentialEndangeredCellX = potentialEndangeredCells.get(i).get(0);
-			int potentialEndangeredCellY = potentialEndangeredCells.get(i).get(1);
+			int potentialEndangeredCellX = potentialEndangeredCells.get(i).x;
+			int potentialEndangeredCellY = potentialEndangeredCells.get(i).y;
 			board.get(potentialEndangeredCellY).get(potentialEndangeredCellX).removePotentialDangerousCell(x, y);
 		}
 	}
 
 	public void removeAllDangerAtCell(int x, int y) {
-		ArrayList<ArrayList<Integer>> dangerousCells = getDangerousCells(x, y);
+		ArrayList<Point> dangerousCells = getDangerousCells(x, y);
 		for (int i = 0; i < dangerousCells.size(); i++) {
-			int dangerousCellX = dangerousCells.get(i).get(0);
-			int dangerousCellY = dangerousCells.get(i).get(1);
+			int dangerousCellX = dangerousCells.get(i).x;
+			int dangerousCellY = dangerousCells.get(i).y;
 			board.get(y).get(x).removeDangerousCell(dangerousCellX, dangerousCellY);
 		}
 
 	}
 	
 	public void changePlayerOneKingCoords(int x, int y) {
-		ArrayList<Integer> coords = new ArrayList<Integer>();
-		coords.add(x);
-		coords.add(y);
+		Point coords = new Point();
+		coords.x = x;
+		coords.y = y;
 
 		playerOneKingCoords = coords;
 	}
 
 	public void changePlayerTwoKingCoords(int x, int y) {
-		ArrayList<Integer> coords = new ArrayList<Integer>();
-		coords.add(x);
-		coords.add(y);
+		Point coords = new Point();
+		coords.x = x;
+		coords.y = y;
 
 		playerTwoKingCoords = coords;
 	}
 
-	public ArrayList<Integer> getPlayerOneKingCoords() {
+	public Point getPlayerOneKingCoords() {
 		return playerOneKingCoords;
 	}
 
-	public ArrayList<Integer> getPlayerTwoKingCoords() {
+	public Point getPlayerTwoKingCoords() {
 		return playerTwoKingCoords;
 	}
 

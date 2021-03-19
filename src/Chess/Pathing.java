@@ -1,5 +1,6 @@
 package Chess;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -23,16 +24,13 @@ public abstract class Pathing {
 	 * moves that a piece can make if an opponent's piece is there
 	 */
 
-	public static ArrayList<ArrayList<Integer>> getPotentialHorizontalLeftMoves(int x, int y, boolean multipleSquares,
+	public static ArrayList<Point> getPotentialHorizontalLeftMoves(int x, int y, boolean multipleSquares,
 			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		for (int xCoord = x - 1; xCoord > -1; xCoord--) {
-			ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-			currentCoords.add(xCoord);
-			currentCoords.add(y);
-			potentialCoords.add(currentCoords);
+			potentialCoords.add(new Point(xCoord, y));
 			if (multipleSquares == false) {
 				break;
 			}
@@ -46,16 +44,13 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialHorizontalRightMoves(int x, int y, boolean multipleSquares,
+	public static ArrayList<Point> getPotentialHorizontalRightMoves(int x, int y, boolean multipleSquares,
 			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		for (int xCoord = x + 1; xCoord < 8; xCoord++) {
-			ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-			currentCoords.add(xCoord);
-			currentCoords.add(y);
-			potentialCoords.add(currentCoords);
+			potentialCoords.add(new Point(xCoord, y));
 			if (multipleSquares == false) {
 				break;
 			}
@@ -69,16 +64,13 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialVerticalUpMoves(int x, int y, boolean multipleSquares,
+	public static ArrayList<Point> getPotentialVerticalUpMoves(int x, int y, boolean multipleSquares,
 			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		for (int yCoord = y + 1; yCoord < 8; yCoord++) {
-			ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-			currentCoords.add(x);
-			currentCoords.add(yCoord);
-			potentialCoords.add(currentCoords);
+			potentialCoords.add(new Point(x, yCoord));
 			if (multipleSquares == false) {
 				break;
 			}
@@ -91,16 +83,13 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialVerticalDownMoves(int x, int y, boolean multipleSquares,
+	public static ArrayList<Point> getPotentialVerticalDownMoves(int x, int y, boolean multipleSquares,
 			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		for (int yCoord = y - 1; yCoord > -1; yCoord--) {
-			ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-			currentCoords.add(x);
-			currentCoords.add(yCoord);
-			potentialCoords.add(currentCoords);
+			potentialCoords.add(new Point(x, yCoord));
 			if (multipleSquares == false) {
 				break;
 			}
@@ -113,10 +102,10 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialVerticleAndHorizontalMoves(int x, int y,
-			boolean multipleSquares, boolean getDangerous, Board board) {
+	public static ArrayList<Point> getPotentialVerticleAndHorizontalMoves(int x, int y, boolean multipleSquares,
+			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		potentialCoords.addAll(getPotentialHorizontalLeftMoves(x, y, multipleSquares, getDangerous, board));
 		potentialCoords.addAll(getPotentialHorizontalRightMoves(x, y, multipleSquares, getDangerous, board));
@@ -126,21 +115,18 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialDiagonalLeftMoves(int x, int y, boolean multipleSquares,
+	public static ArrayList<Point> getPotentialDiagonalLeftMoves(int x, int y, boolean multipleSquares,
 			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		int xCoord = x - 1;
 		int yCoord = y + 1;
 		while (continueChecking) {
-			ArrayList<Integer> currentCoords = new ArrayList<Integer>();
 
 			if (xCoord > -1 && yCoord < 8) {
-				currentCoords.add(xCoord);
-				currentCoords.add(yCoord);
-				potentialCoords.add(currentCoords);
+				potentialCoords.add(new Point(xCoord, yCoord));
 
 				if (multipleSquares == false) {
 					break;
@@ -159,22 +145,18 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialDiagonalRightMoves(int x, int y, boolean multipleSquares,
+	public static ArrayList<Point> getPotentialDiagonalRightMoves(int x, int y, boolean multipleSquares,
 			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		int xCoord = x + 1;
 		int yCoord = y - 1;
 		while (continueChecking) {
 
-			ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-
 			if (xCoord < 8 && yCoord > -1) {
-				currentCoords.add(xCoord);
-				currentCoords.add(yCoord);
-				potentialCoords.add(currentCoords);
+				potentialCoords.add(new Point(xCoord, yCoord));
 
 				if (multipleSquares == false) {
 					break;
@@ -195,22 +177,18 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialAntiDiagonalLeftMoves(int x, int y, boolean multipleSquares,
+	public static ArrayList<Point> getPotentialAntiDiagonalLeftMoves(int x, int y, boolean multipleSquares,
 			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		int xCoord = x - 1;
 		int yCoord = y - 1;
 		while (continueChecking) {
 
-			ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-
 			if (xCoord > -1 & yCoord > -1) {
-				currentCoords.add(xCoord);
-				currentCoords.add(yCoord);
-				potentialCoords.add(currentCoords);
+				potentialCoords.add(new Point(xCoord, yCoord));
 
 				if (multipleSquares == false) {
 					break;
@@ -231,20 +209,17 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialAntiDiagonalRightMoves(int x, int y,
-			boolean multipleSquares, boolean getDangerous, Board board) {
+	public static ArrayList<Point> getPotentialAntiDiagonalRightMoves(int x, int y, boolean multipleSquares,
+			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		int xCoord = x + 1;
 		int yCoord = y + 1;
 		while (continueChecking) {
-			ArrayList<Integer> currentCoords = new ArrayList<Integer>();
 			if (xCoord < 8 && yCoord < 8) {
-				currentCoords.add(xCoord);
-				currentCoords.add(yCoord);
-				potentialCoords.add(currentCoords);
+				potentialCoords.add(new Point(xCoord, yCoord));
 
 				if (multipleSquares == false) {
 					break;
@@ -266,10 +241,10 @@ public abstract class Pathing {
 		return potentialCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getPotentialDiagonalMoves(int x, int y, boolean multipleSquares,
+	public static ArrayList<Point> getPotentialDiagonalMoves(int x, int y, boolean multipleSquares,
 			boolean getDangerous, Board board) {
 
-		ArrayList<ArrayList<Integer>> potentialCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> potentialCoords = new ArrayList<Point>();
 
 		potentialCoords.addAll(getPotentialDiagonalLeftMoves(x, y, multipleSquares, getDangerous, board));
 		potentialCoords.addAll(getPotentialDiagonalRightMoves(x, y, multipleSquares, getDangerous, board));
@@ -285,11 +260,11 @@ public abstract class Pathing {
 	 * your own king vulnerable, which is checked later on
 	 */
 
-	public static ArrayList<ArrayList<Integer>> getAllowableHorizontalLeftMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableHorizontalLeftMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		// starting by testing the left side of the current cell
@@ -320,11 +295,11 @@ public abstract class Pathing {
 		return allowableCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableHorizontalRightMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableHorizontalRightMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		for (int xCoord = x + 1; xCoord < 8; xCoord++) {
@@ -348,11 +323,11 @@ public abstract class Pathing {
 		return allowableCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableVerticalUpMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableVerticalUpMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		for (int yCoord = y + 1; yCoord < 8; yCoord++) {
@@ -378,11 +353,11 @@ public abstract class Pathing {
 
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableVerticalDownMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableVerticalDownMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		for (int yCoord = y - 1; yCoord > -1; yCoord--) {
@@ -408,10 +383,10 @@ public abstract class Pathing {
 
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableVerticalAndHorizontalMoves(int x, int y, int player,
+	public static ArrayList<Point> getAllowableVerticalAndHorizontalMoves(int x, int y, int player,
 			boolean multipleSquares, Board board) {
 
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		allowableCoords.addAll(getAllowableHorizontalLeftMoves(x, y, player, multipleSquares, board));
 		allowableCoords.addAll(getAllowableHorizontalRightMoves(x, y, player, multipleSquares, board));
@@ -421,11 +396,11 @@ public abstract class Pathing {
 
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableDiagonalLeftMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableDiagonalLeftMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		int xCoord = x - 1;
@@ -458,11 +433,11 @@ public abstract class Pathing {
 
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableDiagonalRightMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableDiagonalRightMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		int xCoord = x + 1;
@@ -494,11 +469,11 @@ public abstract class Pathing {
 		return allowableCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableAntiDiagonalLeftMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableAntiDiagonalLeftMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		int xCoord = x - 1;
@@ -530,11 +505,11 @@ public abstract class Pathing {
 		return allowableCoords;
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableAntiDiagonalRightMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableAntiDiagonalRightMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 		continueChecking = true;
 
 		int xCoord = x + 1;
@@ -568,10 +543,10 @@ public abstract class Pathing {
 
 	}
 
-	public static ArrayList<ArrayList<Integer>> getAllowableDiagonalMoves(int x, int y, int player,
-			boolean multipleSquares, Board board) {
+	public static ArrayList<Point> getAllowableDiagonalMoves(int x, int y, int player, boolean multipleSquares,
+			Board board) {
 
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		allowableCoords.addAll(getAllowableDiagonalLeftMoves(x, y, player, multipleSquares, board));
 		allowableCoords.addAll(getAllowableDiagonalRightMoves(x, y, player, multipleSquares, board));
@@ -583,15 +558,14 @@ public abstract class Pathing {
 
 	// this method returns all allowable moves that a knight can make
 
-	public static ArrayList<ArrayList<Integer>> getAllowableKnightMoves(ArrayList<ArrayList<Integer>> potentialMoves,
-			int player, Board board) {
+	public static ArrayList<Point> getAllowableKnightMoves(ArrayList<Point> potentialMoves, int player, Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		for (int i = 0; i < potentialMoves.size(); i++) {
-			int xCoord = potentialMoves.get(i).get(0);
-			int yCoord = potentialMoves.get(i).get(1);
+			int xCoord = potentialMoves.get(i).x;
+			int yCoord = potentialMoves.get(i).y;
 
 			if (xCoord > -1 && xCoord < 8 && yCoord > -1 && yCoord < 8) {
 				currentCoords = checkIfCellAllowable(xCoord, yCoord, player, board);
@@ -610,15 +584,15 @@ public abstract class Pathing {
 	 * later on
 	 */
 
-	public static ArrayList<ArrayList<Integer>> getAllowablePawnMoves(int x, int y,
-			ArrayList<ArrayList<Integer>> potentialMoves, int player, boolean hasMoved, String direction, Board board) {
+	public static ArrayList<Point> getAllowablePawnMoves(int x, int y, ArrayList<Point> potentialMoves, int player,
+			boolean hasMoved, String direction, Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
+		Point currentCoords = new Point();
+		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		for (int i = 0; i < potentialMoves.size(); i++) {
-			int xCoord = potentialMoves.get(i).get(0);
-			int yCoord = potentialMoves.get(i).get(1);
+			int xCoord = potentialMoves.get(i).x;
+			int yCoord = potentialMoves.get(i).y;
 
 			if (xCoord > -1 && xCoord < 8 && yCoord > -1 && yCoord < 8) {
 
@@ -679,16 +653,16 @@ public abstract class Pathing {
 	 * if it is allowed. It also alters a global variable to stop the 'getAllowable'
 	 * methods from continuing checking that line due to having hit a piece
 	 */
-	public static ArrayList<Integer> checkIfCellAllowable(int x, int y, int player, Board board) {
+	public static Point checkIfCellAllowable(int x, int y, int player, Board board) {
 
-		ArrayList<Integer> currentCoords = new ArrayList<Integer>();
+		Point currentCoords = new Point();
 		opponentPiece = false;
 
 		if (board.isCellEmpty(x, y)) {
 
 			// tile is empty
-			currentCoords.add(x);
-			currentCoords.add(y);
+			currentCoords.x = x;
+			currentCoords.y = y;
 			return currentCoords;
 
 		} else {
@@ -707,8 +681,8 @@ public abstract class Pathing {
 
 				// piece in target cell is opponent's so move is permissible
 				opponentPiece = true;
-				currentCoords.add(x);
-				currentCoords.add(y);
+				currentCoords.x = x;
+				currentCoords.y = y;
 				continueChecking = false;
 				return currentCoords;
 			}
@@ -718,27 +692,25 @@ public abstract class Pathing {
 
 	// checks if a move will put their own king into check (and remove it from list)
 
-	public static ArrayList<ArrayList<Integer>> checkMoveForVulnerableCheck(
-			ArrayList<ArrayList<Integer>> allowableMoves, String piece, int player, int startingX, int startingY) {
+	public static ArrayList<Point> checkMoveForVulnerableCheck(ArrayList<Point> allowableMoves, String piece,
+			int player, int startingX, int startingY) {
 
-		ArrayList<ArrayList<Integer>> coordsToRemove = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> coordsToRemove = new ArrayList<Point>();
 
 		for (int i = 0; i < allowableMoves.size(); i++) {
 
 			Board tempBoard = SerializationUtils.clone(Game.getBoard()); // create temporary board to make changes
 
-			int allowableX = allowableMoves.get(i).get(0);
-			int allowableY = allowableMoves.get(i).get(1);
+			int allowableX = allowableMoves.get(i).x;
+			int allowableY = allowableMoves.get(i).y;
 
-			ArrayList<ArrayList<Integer>> allowableCellDangerousCells = tempBoard.getDangerousCells(allowableX,
+			ArrayList<Point> allowableCellDangerousCells = tempBoard.getDangerousCells(allowableX, allowableY);
+			ArrayList<Point> allowableCellPotentialDangerousCells = tempBoard.getPotentialDangerousCells(allowableX,
 					allowableY);
-			ArrayList<ArrayList<Integer>> allowableCellPotentialDangerousCells = tempBoard
-					.getPotentialDangerousCells(allowableX, allowableY);
 
-			ArrayList<ArrayList<Integer>> startingCellDangerousCells = tempBoard.getDangerousCells(startingX,
+			ArrayList<Point> startingCellDangerousCells = tempBoard.getDangerousCells(startingX, startingY);
+			ArrayList<Point> startingCellPotentialDangerousCells = tempBoard.getPotentialDangerousCells(startingX,
 					startingY);
-			ArrayList<ArrayList<Integer>> startingCellPotentialDangerousCells = tempBoard
-					.getPotentialDangerousCells(startingX, startingY);
 
 			// changing temp board to reflect allowable move
 
@@ -760,7 +732,7 @@ public abstract class Pathing {
 
 			}
 
-			ArrayList<Integer> kingCoords = new ArrayList<Integer>();
+			Point kingCoords = new Point();
 			switch (player) {
 			case 1:
 				kingCoords = tempBoard.getPlayerOneKingCoords();
@@ -773,22 +745,22 @@ public abstract class Pathing {
 				break;
 			}
 
-			ArrayList<ArrayList<Integer>> kingPotentialDangerousCells = tempBoard
-					.getPotentialDangerousCells(kingCoords.get(0), kingCoords.get(1));
+			ArrayList<Point> kingPotentialDangerousCells = tempBoard.getPotentialDangerousCells(kingCoords.x,
+					kingCoords.y);
 
 			// going through each of the king's potentially dangerous cells
 
 			for (int j = 0; j < kingPotentialDangerousCells.size(); j++) {
 
-				int kingPotentialDangerousX = kingPotentialDangerousCells.get(j).get(0);
-				int kingPotentialDangerousY = kingPotentialDangerousCells.get(j).get(1);
+				int kingPotentialDangerousX = kingPotentialDangerousCells.get(j).x;
+				int kingPotentialDangerousY = kingPotentialDangerousCells.get(j).y;
 
 				String kingPotentialDangerousPiece = tempBoard.getCellPiece(kingPotentialDangerousX,
 						kingPotentialDangerousY);
 				int kingPotentialDangerousPlayer = tempBoard.getCellPlayer(kingPotentialDangerousX,
 						kingPotentialDangerousY);
 
-				ArrayList<ArrayList<Integer>> kingPotentialDangerousPieceAllowableMoves = new ArrayList<ArrayList<Integer>>();
+				ArrayList<Point> kingPotentialDangerousPieceAllowableMoves = new ArrayList<Point>();
 
 				// retrieving allowable moves from the king's potentially dangerous cell
 
@@ -843,11 +815,7 @@ public abstract class Pathing {
 						if (kingPotentialDangerousPieceAllowableMoves.get(k).equals(kingCoords)
 								&& kingPotentialDangerousPlayer != player) {
 
-							ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-							currentCoords.add(allowableX);
-							currentCoords.add(allowableY);
-
-							coordsToRemove.add(currentCoords);
+							coordsToRemove.add(new Point(allowableX, allowableY));
 							break;
 
 						}
@@ -860,11 +828,7 @@ public abstract class Pathing {
 		}
 
 		for (int l = 0; l < coordsToRemove.size(); l++) {
-			ArrayList<Integer> coordToRemove = new ArrayList<Integer>();
-			coordToRemove.add(coordsToRemove.get(l).get(0));
-			coordToRemove.add(coordsToRemove.get(l).get(1));
-
-			allowableMoves.remove(coordToRemove);
+			allowableMoves.remove(new Point(coordsToRemove.get(l).x, coordsToRemove.get(l).y));
 		}
 
 		return allowableMoves;
@@ -872,19 +836,15 @@ public abstract class Pathing {
 
 	// checks if a player is in checkmate (used only after check is confirmed)
 
-	public static boolean isCheckmate(ArrayList<Integer> kingCoords, ArrayList<Integer> dangerousPieceCoords,
-			int playerInCheck, Board board) {
+	public static boolean isCheckmate(Point kingCoords, Point dangerousPieceCoords, int playerInCheck, Board board) {
 
 		boolean checkmate = true;
 
 		// checking if the threatened king can make any moves
 
-		int kingX = kingCoords.get(0);
-		int kingY = kingCoords.get(1);
+		King king = new King(kingCoords.x, kingCoords.y, playerInCheck);
 
-		King king = new King(kingX, kingY, playerInCheck);
-
-		ArrayList<ArrayList<Integer>> kingAllowableMoves = king.getPossibleMoves(true, board);
+		ArrayList<Point> kingAllowableMoves = king.getPossibleMoves(true, board);
 		System.out.println(!kingAllowableMoves.isEmpty());
 
 		if (!kingAllowableMoves.isEmpty()) {
@@ -894,22 +854,22 @@ public abstract class Pathing {
 
 		// checking if any pieces can take the dangerous piece
 
-		int dangerousX = dangerousPieceCoords.get(0);
-		int dangerousY = dangerousPieceCoords.get(1);
+		int dangerousX = dangerousPieceCoords.x;
+		int dangerousY = dangerousPieceCoords.y;
 
-		ArrayList<ArrayList<Integer>> dangerousPieceDangerousCoords = board.getDangerousCells(dangerousX, dangerousY);
+		ArrayList<Point> dangerousPieceDangerousCoords = board.getDangerousCells(dangerousX, dangerousY);
 
 		for (int i = 0; i < dangerousPieceDangerousCoords.size(); i++) {
 
-			int dangerousPieceDangerousX = dangerousPieceDangerousCoords.get(i).get(0);
-			int dangerousPieceDangerousY = dangerousPieceDangerousCoords.get(i).get(1);
+			int dangerousPieceDangerousX = dangerousPieceDangerousCoords.get(i).x;
+			int dangerousPieceDangerousY = dangerousPieceDangerousCoords.get(i).y;
 			int dangerousPieceDangerousPlayer = board.getCellPlayer(dangerousPieceDangerousX, dangerousPieceDangerousY);
 			String dangerousPieceDangerousPiece = board.getCellPiece(dangerousPieceDangerousX,
 					dangerousPieceDangerousY);
 
 			if (dangerousPieceDangerousPlayer == playerInCheck) {
 
-				ArrayList<ArrayList<Integer>> dangerousPieceDangerousPieceAllowableMoves = new ArrayList<ArrayList<Integer>>();
+				ArrayList<Point> dangerousPieceDangerousPieceAllowableMoves = new ArrayList<Point>();
 
 				switch (dangerousPieceDangerousPiece) {
 
@@ -950,8 +910,8 @@ public abstract class Pathing {
 				}
 
 				for (int j = 0; j < dangerousPieceDangerousPieceAllowableMoves.size(); j++) {
-					if (dangerousPieceDangerousPieceAllowableMoves.get(j).get(0) == dangerousX
-							&& dangerousPieceDangerousPieceAllowableMoves.get(j).get(1) == dangerousY) {
+					if (dangerousPieceDangerousPieceAllowableMoves.get(j).x == dangerousX
+							&& dangerousPieceDangerousPieceAllowableMoves.get(j).y == dangerousY) {
 
 						// dangerous piece's dangerous piece can take the dangerous piece
 						checkmate = false;
@@ -966,8 +926,8 @@ public abstract class Pathing {
 		// checking if any pieces can move in the way of the dangerous piece
 
 		String dangerousPiece = board.getCellPiece(dangerousX, dangerousY);
-		ArrayList<ArrayList<Integer>> coordsToCheck = new ArrayList<ArrayList<Integer>>();
-		ArrayList<ArrayList<Integer>> dangerousPieceAllowableCoordsFromLine = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Point> coordsToCheck = new ArrayList<Point>();
+		ArrayList<Point> dangerousPieceAllowableCoordsFromLine = new ArrayList<Point>();
 
 		// start by finding out the correct line that leads to the king (only applicable
 		// for queens, bishops and castles
@@ -977,49 +937,49 @@ public abstract class Pathing {
 			Queen queen = new Queen(dangerousX, dangerousY, playerInCheck);
 
 			coordsToCheck = queen.getPotentialDiagonalLeftMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = queen.getPotentialDiagonalRightMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = queen.getPotentialAntiDiagonalLeftMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = queen.getPotentialAntiDiagonalRightMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = queen.getPotentialHorizontalLeftMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = queen.getPotentialHorizontalRightMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = queen.getPotentialVerticalUpMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = queen.getPotentialVerticalDownMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
@@ -1029,25 +989,25 @@ public abstract class Pathing {
 			Bishop bishop = new Bishop(dangerousX, dangerousY, playerInCheck);
 
 			coordsToCheck = bishop.getPotentialDiagonalLeftMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = bishop.getPotentialDiagonalRightMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = bishop.getPotentialAntiDiagonalLeftMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = bishop.getPotentialAntiDiagonalRightMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
@@ -1057,25 +1017,25 @@ public abstract class Pathing {
 			Castle castle = new Castle(dangerousX, dangerousY, playerInCheck);
 
 			coordsToCheck = castle.getPotentialHorizontalLeftMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = castle.getPotentialHorizontalRightMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = castle.getPotentialVerticalUpMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
 
 			coordsToCheck = castle.getPotentialVerticalDownMoves(board);
-			if (checkForCoords(coordsToCheck, kingCoords.get(0), kingCoords.get(1))) {
+			if (checkForCoords(coordsToCheck, kingCoords.x, kingCoords.y)) {
 				dangerousPieceAllowableCoordsFromLine = coordsToCheck;
 				break;
 			}
@@ -1085,20 +1045,20 @@ public abstract class Pathing {
 		dangerousPieceAllowableCoordsFromLine.remove(kingCoords);
 		for (int k = 0; k < dangerousPieceAllowableCoordsFromLine.size(); k++) {
 
-			int dangerousPieceAllowableX = dangerousPieceAllowableCoordsFromLine.get(k).get(0);
-			int dangerousPieceAllowableY = dangerousPieceAllowableCoordsFromLine.get(k).get(1);
+			int dangerousPieceAllowableX = dangerousPieceAllowableCoordsFromLine.get(k).x;
+			int dangerousPieceAllowableY = dangerousPieceAllowableCoordsFromLine.get(k).y;
 
 			// get the pieces that can potentially get in the way and check if they are able
 			// to
 
-			ArrayList<ArrayList<Integer>> dangerousPieceAllowableCoordPotentialDangerousCoords = board
+			ArrayList<Point> dangerousPieceAllowableCoordPotentialDangerousCoords = board
 					.getPotentialDangerousCells(dangerousPieceAllowableX, dangerousPieceAllowableY);
 			for (int l = 0; l < dangerousPieceAllowableCoordPotentialDangerousCoords.size(); l++) {
 
 				int dangerousPieceAllowableCoordPotentialDangerousX = dangerousPieceAllowableCoordPotentialDangerousCoords
-						.get(l).get(0);
+						.get(l).x;
 				int dangerousPieceAllowableCoordPotentialDangerousY = dangerousPieceAllowableCoordPotentialDangerousCoords
-						.get(l).get(1);
+						.get(l).y;
 				int dangerousPieceAllowableCoordPotentialDangerousPiecePlayer = board.getCellPlayer(
 						dangerousPieceAllowableCoordPotentialDangerousX,
 						dangerousPieceAllowableCoordPotentialDangerousY);
@@ -1106,10 +1066,8 @@ public abstract class Pathing {
 						dangerousPieceAllowableCoordPotentialDangerousX,
 						dangerousPieceAllowableCoordPotentialDangerousY);
 
-				ArrayList<ArrayList<Integer>> dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = null;
-				ArrayList<Integer> currentCoords = new ArrayList<Integer>();
-				currentCoords.add(dangerousPieceAllowableCoordPotentialDangerousX);
-				currentCoords.add(dangerousPieceAllowableCoordPotentialDangerousY);
+				ArrayList<Point> dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = null;
+				Point currentCoords = new Point(dangerousPieceAllowableCoordPotentialDangerousX, dangerousPieceAllowableCoordPotentialDangerousY);
 
 				if (dangerousPieceAllowableCoordPotentialDangerousPiece != null) {
 
@@ -1186,11 +1144,11 @@ public abstract class Pathing {
 
 	// checks for a coordinate within an ArrayList of coordinates
 
-	public static boolean checkForCoords(ArrayList<ArrayList<Integer>> coords, int x, int y) {
+	public static boolean checkForCoords(ArrayList<Point> coords, int x, int y) {
 		boolean coordsMatch = false;
 		for (int i = 0; i < coords.size(); i++) {
-			int potentialX = coords.get(i).get(0);
-			int potentialY = coords.get(i).get(1);
+			int potentialX = coords.get(i).x;
+			int potentialY = coords.get(i).y;
 
 			if (potentialX == x && potentialY == y) {
 				// line found that includes king

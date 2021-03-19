@@ -1,6 +1,7 @@
 package Chess;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 
 import GUI.BoardGUI;
@@ -16,9 +17,9 @@ public class Game {
 	private static Board board;
 	private static BoardGUI window;
 	private static Controller controller;
-	private static ArrayList<ArrayList<Integer>> allowableCoords = new ArrayList<ArrayList<Integer>>();
-	private static ArrayList<ArrayList<Integer>> previousDangerousCoords = new ArrayList<ArrayList<Integer>>();
-	private static ArrayList<ArrayList<Integer>> previousPotentialDangerousCoords = new ArrayList<ArrayList<Integer>>();
+	private static ArrayList<Point> allowableCoords = new ArrayList<Point>();
+	private static ArrayList<Point> previousDangerousCoords = new ArrayList<Point>();
+	private static ArrayList<Point> previousPotentialDangerousCoords = new ArrayList<Point>();
 	private static boolean piecePreviouslySelected = false;
 	private static String previousPieceSelectedLocation;
 	private static int previouslySelectedX;
@@ -60,9 +61,9 @@ public class Game {
 		window.changeCellColour(x, y, colour);
 	}
 
-	public static void changeBoardGUICellColour(ArrayList<ArrayList<Integer>> allowableCoords, Color colour) {
+	public static void changeBoardGUICellColour(ArrayList<Point> allowableCoords, Color colour) {
 		for (int i = 0; i < allowableCoords.size(); i++) {
-			window.changeCellColour(allowableCoords.get(i).get(0), allowableCoords.get(i).get(1), colour);
+			window.changeCellColour(allowableCoords.get(i).x, allowableCoords.get(i).y, colour);
 
 		}
 	}
@@ -72,13 +73,13 @@ public class Game {
 	}
 
 	public static void changeBoardCell(int x, int y, int player, String piece, String pieceLocation,
-			ArrayList<ArrayList<Integer>> potentialDangerousCells, ArrayList<ArrayList<Integer>> dangerousCells) {
+			ArrayList<Point> potentialDangerousCells, ArrayList<Point> dangerousCells) {
 		board.changeCell(x, y, player, piece, potentialDangerousCells, dangerousCells);
 		changeBoardGUICellPiece(x, y, pieceLocation);
 	}
 
-	public static void removeBoardCell(int x, int y, ArrayList<ArrayList<Integer>> potentialDangerousCells,
-			ArrayList<ArrayList<Integer>> dangerousCells) {
+	public static void removeBoardCell(int x, int y, ArrayList<Point> potentialDangerousCells,
+			ArrayList<Point> dangerousCells) {
 		board.removeCell(x, y, potentialDangerousCells, dangerousCells);
 		changeBoardGUICellPiece(x, y, "null");
 	}
@@ -108,16 +109,16 @@ public class Game {
 				boolean pieceMoved = false;
 
 				for (int i = 0; i < allowableCoords.size(); i++) {
-					if (allowableCoords.get(i).get(0) == selectedX && allowableCoords.get(i).get(1) == selectedY) {
+					if (allowableCoords.get(i).x == selectedX && allowableCoords.get(i).y == selectedY) {
 
 						// piece is allowed to move into selected cell
 
 						selectedPiece = board.getCellPiece(selectedX, selectedY);
 						selectedPlayer = board.getCellPlayer(selectedX, selectedY);
 
-						ArrayList<ArrayList<Integer>> selectedCellDangerousCoords = board.getDangerousCells(selectedX,
+						ArrayList<Point> selectedCellDangerousCoords = board.getDangerousCells(selectedX,
 								selectedY);
-						ArrayList<ArrayList<Integer>> previousCellDangerousCoords = board
+						ArrayList<Point> previousCellDangerousCoords = board
 								.getDangerousCells(previouslySelectedX, previouslySelectedY);
 
 						// changing board to reflect the piece's move
@@ -129,8 +130,8 @@ public class Game {
 								board.getDangerousCells(previouslySelectedX, previouslySelectedY));
 
 						// checking next possible moves of piece in case of check
-						ArrayList<ArrayList<Integer>> newDangerousCoords = null;
-						ArrayList<ArrayList<Integer>> newPotentialDangerousCoords = null;
+						ArrayList<Point> newDangerousCoords = null;
+						ArrayList<Point> newPotentialDangerousCoords = null;
 
 						switch (previouslySelectedPiece) {
 
@@ -228,9 +229,9 @@ public class Game {
 
 						if (controller.isPlayerInCheck(1)) {
 
-							ArrayList<Integer> selectedCoords = new ArrayList<Integer>();
-							selectedCoords.add(selectedX);
-							selectedCoords.add(selectedY);
+							Point selectedCoords = new Point();
+							selectedCoords.x = selectedX;
+							selectedCoords.y = selectedY;
 
 							if (Pathing.isCheckmate(board.getPlayerOneKingCoords(), selectedCoords, 1, board)) {
 								BoardGUI.showMessage("Checkmate - player 2 wins!");
@@ -242,9 +243,9 @@ public class Game {
 
 						if (controller.isPlayerInCheck(2)) {
 
-							ArrayList<Integer> selectedCoords = new ArrayList<Integer>();
-							selectedCoords.add(selectedX);
-							selectedCoords.add(selectedY);
+							Point selectedCoords = new Point();
+							selectedCoords.x = selectedX;
+							selectedCoords.y = selectedY;
 
 							if (Pathing.isCheckmate(board.getPlayerTwoKingCoords(), selectedCoords, 2, board)) {
 								BoardGUI.showMessage("Checkmate - player 1 wins!");
@@ -283,8 +284,8 @@ public class Game {
 
 				for (int j = 0; j < allowableCoords.size(); j++) {
 
-					int xCoord = allowableCoords.get(j).get(0);
-					int yCoord = allowableCoords.get(j).get(1);
+					int xCoord = allowableCoords.get(j).x;
+					int yCoord = allowableCoords.get(j).y;
 
 					window.removeRedCell(xCoord, yCoord);
 
@@ -383,19 +384,19 @@ public class Game {
 	 * 
 	 */
 
-	public static void recalculateDangerAtCell(int x, int y, ArrayList<ArrayList<Integer>> dangerousCoordsAtPoint) {
+	public static void recalculateDangerAtCell(int x, int y, ArrayList<Point> dangerousCoordsAtPoint) {
 
 		System.out.println("Dangerous coords at point: " + dangerousCoordsAtPoint);
 		int numberOfDangerousCoords = dangerousCoordsAtPoint.size();
 
 		for (int i = 0; i < numberOfDangerousCoords; i++) {
 
-			int xCoord = dangerousCoordsAtPoint.get(i).get(0);
-			int yCoord = dangerousCoordsAtPoint.get(i).get(1);
+			int xCoord = dangerousCoordsAtPoint.get(i).x;
+			int yCoord = dangerousCoordsAtPoint.get(i).y;
 			int player = getBoardPlayer(xCoord, yCoord);
 			String piece = getBoardPiece(xCoord, yCoord);
-			ArrayList<ArrayList<Integer>> dangerousCoords = null;
-			ArrayList<ArrayList<Integer>> potentialCoords = null;
+			ArrayList<Point> dangerousCoords = null;
+			ArrayList<Point> potentialCoords = null;
 
 			if (piece != null) {
 
@@ -444,8 +445,8 @@ public class Game {
 				if (potentialCoords != null) {
 
 					for (int k = 0; k < potentialCoords.size(); k++) {
-						int xxx = potentialCoords.get(k).get(0);
-						int yyy = potentialCoords.get(k).get(1);
+						int xxx = potentialCoords.get(k).x;
+						int yyy = potentialCoords.get(k).y;
 
 						board.removeDangerousCell(xxx, yyy, xCoord, yCoord);
 
@@ -457,8 +458,8 @@ public class Game {
 
 				for (int j = 0; j < dangerousCoords.size(); j++) {
 
-					int xx = dangerousCoords.get(j).get(0);
-					int yy = dangerousCoords.get(j).get(1);
+					int xx = dangerousCoords.get(j).x;
+					int yy = dangerousCoords.get(j).y;
 
 					board.addDangerousCell(xx, yy, xCoord, yCoord);
 
@@ -473,9 +474,9 @@ public class Game {
 	 * after a move is made and the piece's new allowable coordinates are calculated
 	 */
 
-	public static void checkForCheck(ArrayList<ArrayList<Integer>> allowableMoves, int player) {
+	public static void checkForCheck(ArrayList<Point> allowableMoves, int player) {
 
-		ArrayList<Integer> opponentKingCoords = new ArrayList<Integer>();
+		Point opponentKingCoords = new Point();
 		boolean check = false;
 
 		switch (player) {
