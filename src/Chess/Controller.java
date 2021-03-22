@@ -6,6 +6,12 @@ public class Controller {
 	private boolean playerOneCheck;
 	private boolean playerTwoCheck;
 	private boolean gameComplete;
+	
+	public Controller() {
+		setGameComplete(false);
+		setPlayerTurn(1);
+	}
+	
 
 	public int getPlayerTurn() {
 		return playerTurn;

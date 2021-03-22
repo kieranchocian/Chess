@@ -34,11 +34,9 @@ public class Game {
 		System.out.println("Board created");
 		board.initialiseDangerousCells();
 		System.out.println("Dangerous cells added");
-		controller = new Controller();
-		controller.setGameComplete(false);
-		controller.setPlayerTurn(1);
 		board.changePlayerOneKingCoords(4, 0);
 		board.changePlayerTwoKingCoords(4, 7);
+		controller = new Controller();
 	}
 
 	public static Board getBoard() {
@@ -90,8 +88,8 @@ public class Game {
 
 	public static void actionPerformed(int selectedX, int selectedY) {
 
-		System.out.println("Player one in check: " + controller.isPlayerInCheck(1));
-		System.out.println("Player two in check: " + controller.isPlayerInCheck(2));
+		System.out.println("Player one pieces: " + board.getPlayerPiecesCoords(1));
+		System.out.println("Player two pieces: " + board.getPlayerPiecesCoords(2));
 
 		int selectedPlayer = getBoardPlayer(selectedX, selectedY);
 		String selectedPiece = getBoardPiece(selectedX, selectedY);
@@ -128,6 +126,10 @@ public class Game {
 						removeBoardCell(previouslySelectedX, previouslySelectedY,
 								board.getPotentialDangerousCells(previouslySelectedX, previouslySelectedY),
 								board.getDangerousCells(previouslySelectedX, previouslySelectedY));
+						
+						board.removePlayerPiecesCoords(previouslySelectedPlayer, new Point(previouslySelectedX, previouslySelectedY));
+						board.removePlayerPiecesCoords(selectedPlayer, new Point(selectedX, selectedY));
+						board.addPlayerPiecesCoords(previouslySelectedPlayer, new Point(selectedX, selectedY));
 
 						// checking next possible moves of piece in case of check
 						ArrayList<Point> newDangerousCoords = null;
@@ -227,6 +229,8 @@ public class Game {
 						recalculateDangerAtCell(selectedX, selectedY, selectedCellDangerousCoords);
 						recalculateDangerAtCell(previouslySelectedX, previouslySelectedY, previousCellDangerousCoords);
 
+						// checking if opponent is in check/checkmate
+						
 						if (controller.isPlayerInCheck(1)) {
 
 							Point selectedCoords = new Point();

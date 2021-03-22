@@ -16,6 +16,8 @@ public class Board implements Serializable {
 	private ArrayList<ArrayList<Cell>> board = new ArrayList<ArrayList<Cell>>();
 	private Point playerOneKingCoords = new Point();
 	private Point playerTwoKingCoords = new Point();
+	private ArrayList<Point> playerOnePiecesCoords = new ArrayList<Point>();
+	private ArrayList<Point> playerTwoPiecesCoords = new ArrayList<Point>();
 
 	public Board() {
 		createBoard();
@@ -161,12 +163,16 @@ public class Board implements Serializable {
 
 			}
 			board.add(row);
-			System.out.println(board);
 		}
 
 	}
 
-	// adding dangerousCells and potentialDangerousCells to each cell in board
+	/*
+	 * This adds dangerousCells and potentialDangerousCells to each cell in board.
+	 * Additionally, it adds coords of each player's pieces to playerXPiecesCoords
+	 * in order to save time creating a new method and going through all pieces
+	 * again
+	 */
 	public void initialiseDangerousCells() {
 
 		ArrayList<Point> potentialEndangeredCells;
@@ -194,12 +200,6 @@ public class Board implements Serializable {
 						System.out.println(
 								"Castle's dangerous cells at coords: (" + x + ", " + y + "): " + endangeredCells);
 						addEndangeredCells(x, y, endangeredCells);
-
-						// System.out.println("Dangerous cells at coords (0, 2): " +
-						// Game.getBoard().getDangerousCells(0, 2));
-						// System.out.println("Potential dangerous cells at coords (0, 2): " +
-						// Game.getBoard().getPotentialDangerousCells(0, 2));
-
 						break;
 
 					case "Knight":
@@ -269,6 +269,18 @@ public class Board implements Serializable {
 						break;
 
 					}
+
+					// adding coords of each player's pieces to playerXPiecesCoords
+
+					switch (player) {
+					case 1:
+						playerOnePiecesCoords.add(new Point(x, y));
+						break;
+
+					case 2:
+						playerTwoPiecesCoords.add(new Point(x, y));
+						break;
+					}
 				}
 			}
 		}
@@ -313,8 +325,7 @@ public class Board implements Serializable {
 
 	}
 
-	public void removeCell(int x, int y, ArrayList<Point> potentialDangerousCell,
-			ArrayList<Point> dangerousCells) {
+	public void removeCell(int x, int y, ArrayList<Point> potentialDangerousCell, ArrayList<Point> dangerousCells) {
 
 		Cell emptyCell = new Cell(x, y, potentialDangerousCell, dangerousCells);
 		board.get(y).set(x, emptyCell);
@@ -379,7 +390,7 @@ public class Board implements Serializable {
 		}
 
 	}
-	
+
 	public void changePlayerOneKingCoords(int x, int y) {
 		Point coords = new Point();
 		coords.x = x;
@@ -402,6 +413,45 @@ public class Board implements Serializable {
 
 	public Point getPlayerTwoKingCoords() {
 		return playerTwoKingCoords;
+	}
+
+	public ArrayList<Point> getPlayerPiecesCoords(int player) {
+		ArrayList<Point> playerPiecesCoords = new ArrayList<Point>();
+		switch (player) {
+		case 1:
+			playerPiecesCoords = playerOnePiecesCoords;
+			break;
+
+		case 2:
+			playerPiecesCoords = playerTwoPiecesCoords;
+			break;
+		}
+		return playerPiecesCoords;
+	}
+
+	public void addPlayerPiecesCoords(int player, Point coords) {
+		switch (player) {
+		case 1:
+			playerOnePiecesCoords.add(coords);
+			break;
+
+		case 2:
+			playerTwoPiecesCoords.add(coords);
+			break;
+		}
+	}
+
+	public void removePlayerPiecesCoords(int player, Point coords) {
+		switch (player) {
+		case 1:
+			playerOnePiecesCoords.remove(coords);
+			break;
+
+		case 2:
+			playerTwoPiecesCoords.remove(coords);
+			break;
+		}
+
 	}
 
 }
