@@ -732,18 +732,9 @@ public abstract class Pathing {
 
 			}
 
-			Point kingCoords = new Point();
-			switch (player) {
-			case 1:
-				kingCoords = tempBoard.getPlayerOneKingCoords();
-				System.out.println("Temp board player 1 King coords: " + kingCoords);
-				break;
-
-			case 2:
-				kingCoords = tempBoard.getPlayerTwoKingCoords();
-				System.out.println("Temp board player 2 King coords: " + kingCoords);
-				break;
-			}
+			Point kingCoords = tempBoard.getKingCoords(player);
+			System.out.println("Temp board player " + player + " King coords: " + kingCoords);
+				
 
 			ArrayList<Point> kingPotentialDangerousCells = tempBoard.getPotentialDangerousCells(kingCoords.x,
 					kingCoords.y);
@@ -766,44 +757,8 @@ public abstract class Pathing {
 
 				if (kingPotentialDangerousPiece != null) {
 
-					switch (kingPotentialDangerousPiece) {
-
-					case "Castle":
-						Castle castle = new Castle(kingPotentialDangerousX, kingPotentialDangerousY,
-								kingPotentialDangerousPlayer);
-						kingPotentialDangerousPieceAllowableMoves = castle.getPossibleMoves(false, tempBoard);
-						break;
-
-					case "Bishop":
-						Bishop bishop = new Bishop(kingPotentialDangerousX, kingPotentialDangerousY,
-								kingPotentialDangerousPlayer);
-						kingPotentialDangerousPieceAllowableMoves = bishop.getPossibleMoves(false, tempBoard);
-						break;
-
-					case "Queen":
-						Queen queen = new Queen(kingPotentialDangerousX, kingPotentialDangerousY,
-								kingPotentialDangerousPlayer);
-						kingPotentialDangerousPieceAllowableMoves = queen.getPossibleMoves(false, tempBoard);
-						break;
-
-					case "Pawn":
-						Pawn pawn = new Pawn(kingPotentialDangerousX, kingPotentialDangerousY,
-								kingPotentialDangerousPlayer);
-						kingPotentialDangerousPieceAllowableMoves = pawn.getPossibleMoves(false, tempBoard);
-						break;
-
-					case "Knight":
-						Knight knight = new Knight(kingPotentialDangerousX, kingPotentialDangerousY,
-								kingPotentialDangerousPlayer);
-						kingPotentialDangerousPieceAllowableMoves = knight.getPossibleMoves(false, tempBoard);
-						break;
-
-					case "King":
-						King king = new King(kingPotentialDangerousX, kingPotentialDangerousY,
-								kingPotentialDangerousPlayer);
-						kingPotentialDangerousPieceAllowableMoves = king.getPossibleMoves(false, tempBoard);
-						break;
-					}
+					kingPotentialDangerousPieceAllowableMoves = getAllowableMoves(kingPotentialDangerousX,
+							kingPotentialDangerousY, kingPotentialDangerousPlayer, kingPotentialDangerousPiece, false, tempBoard);
 
 					// checking if the allowable moves from the king's potentially dangerous cell
 					// includes the player's king
@@ -871,43 +826,8 @@ public abstract class Pathing {
 
 				ArrayList<Point> dangerousPieceDangerousPieceAllowableMoves = new ArrayList<Point>();
 
-				switch (dangerousPieceDangerousPiece) {
-
-				case "Castle":
-					Castle castle = new Castle(dangerousPieceDangerousX, dangerousPieceDangerousY,
-							dangerousPieceDangerousPlayer);
-					dangerousPieceDangerousPieceAllowableMoves = castle.getPossibleMoves(true, board);
-					break;
-
-				case "Bishop":
-					Bishop bishop = new Bishop(dangerousPieceDangerousX, dangerousPieceDangerousY,
-							dangerousPieceDangerousPlayer);
-					dangerousPieceDangerousPieceAllowableMoves = bishop.getPossibleMoves(true, board);
-					break;
-
-				case "Queen":
-					Queen queen = new Queen(dangerousPieceDangerousX, dangerousPieceDangerousY,
-							dangerousPieceDangerousPlayer);
-					dangerousPieceDangerousPieceAllowableMoves = queen.getPossibleMoves(true, board);
-					break;
-
-				case "Pawn":
-					Pawn pawn = new Pawn(dangerousPieceDangerousX, dangerousPieceDangerousY,
-							dangerousPieceDangerousPlayer);
-					dangerousPieceDangerousPieceAllowableMoves = pawn.getPossibleMoves(true, board);
-					break;
-
-				case "Knight":
-					Knight knight = new Knight(dangerousPieceDangerousX, dangerousPieceDangerousY,
-							dangerousPieceDangerousPlayer);
-					dangerousPieceDangerousPieceAllowableMoves = knight.getPossibleMoves(true, board);
-					break;
-
-				case "King":
-					king = new King(dangerousPieceDangerousX, dangerousPieceDangerousY, dangerousPieceDangerousPlayer);
-					dangerousPieceDangerousPieceAllowableMoves = king.getPossibleMoves(true, board);
-					break;
-				}
+				dangerousPieceDangerousPieceAllowableMoves = getAllowableMoves(dangerousPieceDangerousX,
+						dangerousPieceDangerousY, dangerousPieceDangerousPlayer, dangerousPieceDangerousPiece, true, board);
 
 				for (int j = 0; j < dangerousPieceDangerousPieceAllowableMoves.size(); j++) {
 					if (dangerousPieceDangerousPieceAllowableMoves.get(j).x == dangerousX
@@ -1067,59 +987,18 @@ public abstract class Pathing {
 						dangerousPieceAllowableCoordPotentialDangerousY);
 
 				ArrayList<Point> dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = null;
-				Point currentCoords = new Point(dangerousPieceAllowableCoordPotentialDangerousX, dangerousPieceAllowableCoordPotentialDangerousY);
+				Point currentCoords = new Point(dangerousPieceAllowableCoordPotentialDangerousX,
+						dangerousPieceAllowableCoordPotentialDangerousY);
 
 				if (dangerousPieceAllowableCoordPotentialDangerousPiece != null) {
 
 					if (dangerousPieceAllowableCoordPotentialDangerousPiecePlayer == playerInCheck) {
 
-						switch (dangerousPieceAllowableCoordPotentialDangerousPiece) {
-
-						case "Castle":
-							Castle castle = new Castle(dangerousPieceAllowableCoordPotentialDangerousX,
-									dangerousPieceAllowableCoordPotentialDangerousY,
-									dangerousPieceAllowableCoordPotentialDangerousPiecePlayer);
-							dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = castle
-									.getPossibleMoves(true, board);
-							break;
-
-						case "Bishop":
-							Bishop bishop = new Bishop(dangerousPieceAllowableCoordPotentialDangerousX,
-									dangerousPieceAllowableCoordPotentialDangerousY,
-									dangerousPieceAllowableCoordPotentialDangerousPiecePlayer);
-							dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = bishop
-									.getPossibleMoves(true, board);
-							break;
-
-						case "Queen":
-							Queen queen = new Queen(dangerousPieceAllowableCoordPotentialDangerousX,
-									dangerousPieceAllowableCoordPotentialDangerousY,
-									dangerousPieceAllowableCoordPotentialDangerousPiecePlayer);
-							dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = queen
-									.getPossibleMoves(true, board);
-							break;
-
-						case "Pawn":
-							Pawn pawn = new Pawn(dangerousPieceAllowableCoordPotentialDangerousX,
-									dangerousPieceAllowableCoordPotentialDangerousY,
-									dangerousPieceAllowableCoordPotentialDangerousPiecePlayer);
-							dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = pawn
-									.getPossibleMoves(true, board);
-							break;
-
-						case "Knight":
-							Knight knight = new Knight(dangerousPieceAllowableCoordPotentialDangerousX,
-									dangerousPieceAllowableCoordPotentialDangerousY,
-									dangerousPieceAllowableCoordPotentialDangerousPiecePlayer);
-							dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = knight
-									.getPossibleMoves(true, board);
-							break;
-
-						case "King":
-							dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = king
-									.getPossibleMoves(true, board);
-							break;
-						}
+						dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = getAllowableMoves(
+								dangerousPieceAllowableCoordPotentialDangerousX,
+								dangerousPieceAllowableCoordPotentialDangerousY,
+								dangerousPieceAllowableCoordPotentialDangerousPiecePlayer,
+								dangerousPieceAllowableCoordPotentialDangerousPiece, true, board);
 
 						for (int m = 0; m < dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords
 								.size(); m++) {
@@ -1159,6 +1038,47 @@ public abstract class Pathing {
 
 		}
 		return coordsMatch;
+	}
+
+	public static ArrayList<Point> getAllowableMoves(int x, int y, int player, String piece, boolean checkForKingCheck, Board board) {
+
+		ArrayList<Point> allowableMoves = new ArrayList<Point>();
+
+		switch (piece) {
+
+		case "Castle":
+			Castle castle = new Castle(x, y, player);
+			allowableMoves = castle.getPossibleMoves(checkForKingCheck, board);
+			break;
+
+		case "Bishop":
+			Bishop bishop = new Bishop(x, y, player);
+			allowableMoves = bishop.getPossibleMoves(checkForKingCheck, board);
+			break;
+
+		case "Queen":
+			Queen queen = new Queen(x, y, player);
+			allowableMoves = queen.getPossibleMoves(checkForKingCheck, board);
+			break;
+
+		case "Pawn":
+			Pawn pawn = new Pawn(x, y, player);
+			allowableMoves = pawn.getPossibleMoves(checkForKingCheck, board);
+			break;
+
+		case "Knight":
+			Knight knight = new Knight(x, y, player);
+			allowableMoves = knight.getPossibleMoves(checkForKingCheck, board);
+			break;
+
+		case "King":
+			King king = new King(x, y, player);
+			allowableMoves = king.getPossibleMoves(checkForKingCheck, board);
+			break;
+		}
+
+		return allowableMoves;
+
 	}
 
 }

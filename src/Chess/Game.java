@@ -114,10 +114,9 @@ public class Game {
 						selectedPiece = board.getCellPiece(selectedX, selectedY);
 						selectedPlayer = board.getCellPlayer(selectedX, selectedY);
 
-						ArrayList<Point> selectedCellDangerousCoords = board.getDangerousCells(selectedX,
-								selectedY);
-						ArrayList<Point> previousCellDangerousCoords = board
-								.getDangerousCells(previouslySelectedX, previouslySelectedY);
+						ArrayList<Point> selectedCellDangerousCoords = board.getDangerousCells(selectedX, selectedY);
+						ArrayList<Point> previousCellDangerousCoords = board.getDangerousCells(previouslySelectedX,
+								previouslySelectedY);
 
 						// changing board to reflect the piece's move
 						changeBoardCell(selectedX, selectedY, previouslySelectedPlayer, previouslySelectedPiece,
@@ -126,8 +125,9 @@ public class Game {
 						removeBoardCell(previouslySelectedX, previouslySelectedY,
 								board.getPotentialDangerousCells(previouslySelectedX, previouslySelectedY),
 								board.getDangerousCells(previouslySelectedX, previouslySelectedY));
-						
-						board.removePlayerPiecesCoords(previouslySelectedPlayer, new Point(previouslySelectedX, previouslySelectedY));
+
+						board.removePlayerPiecesCoords(previouslySelectedPlayer,
+								new Point(previouslySelectedX, previouslySelectedY));
 						board.removePlayerPiecesCoords(selectedPlayer, new Point(selectedX, selectedY));
 						board.addPlayerPiecesCoords(previouslySelectedPlayer, new Point(selectedX, selectedY));
 
@@ -229,15 +229,15 @@ public class Game {
 						recalculateDangerAtCell(selectedX, selectedY, selectedCellDangerousCoords);
 						recalculateDangerAtCell(previouslySelectedX, previouslySelectedY, previousCellDangerousCoords);
 
-						// checking if opponent is in check/checkmate
-						
+						// checking if opponent is in checkmate
+
 						if (controller.isPlayerInCheck(1)) {
 
 							Point selectedCoords = new Point();
 							selectedCoords.x = selectedX;
 							selectedCoords.y = selectedY;
 
-							if (Pathing.isCheckmate(board.getPlayerOneKingCoords(), selectedCoords, 1, board)) {
+							if (Pathing.isCheckmate(board.getKingCoords(1), selectedCoords, 1, board)) {
 								BoardGUI.showMessage("Checkmate - player 2 wins!");
 								controller.setGameComplete(true);
 							} else {
@@ -251,11 +251,19 @@ public class Game {
 							selectedCoords.x = selectedX;
 							selectedCoords.y = selectedY;
 
-							if (Pathing.isCheckmate(board.getPlayerTwoKingCoords(), selectedCoords, 2, board)) {
+							if (Pathing.isCheckmate(board.getKingCoords(2), selectedCoords, 2, board)) {
 								BoardGUI.showMessage("Checkmate - player 1 wins!");
 								controller.setGameComplete(true);
 							} else {
 								System.out.println("Not checkmate");
+							}
+						}
+
+						// checking if players are in stalemate
+						if (!controller.isGameComplete()) {
+							if (checkForStalemate(previouslySelectedPlayer, board)) {
+								BoardGUI.showMessage("Stalemate - tie game!");
+								controller.setGameComplete(true);
 							}
 						}
 
@@ -484,13 +492,11 @@ public class Game {
 		boolean check = false;
 
 		switch (player) {
-
 		case 1:
-			opponentKingCoords = board.getPlayerTwoKingCoords();
+			opponentKingCoords = board.getKingCoords(2);
 			break;
-
 		case 2:
-			opponentKingCoords = board.getPlayerOneKingCoords();
+			opponentKingCoords = board.getKingCoords(1);
 			break;
 
 		}
@@ -520,6 +526,46 @@ public class Game {
 			controller.setPlayerCheck(1, false);
 			controller.setPlayerCheck(2, false);
 		}
+	}
+
+	public static boolean checkForStalemate(int currentPlayer, Board board) {
+
+		int opponentPlayer = 0;
+		boolean stalemate = true;
+
+		switch (currentPlayer) {
+		case 1:
+			opponentPlayer = 2;
+			break;
+		case 2:
+			opponentPlayer = 1;
+			break;
+
+		}
+
+		ArrayList<Point> opponentPiecesCoords = board.getPlayerPiecesCoords(opponentPlayer);
+
+		for (int i = 0; i < opponentPiecesCoords.size(); i++) {
+
+			Point opponentPieceCoords = opponentPiecesCoords.get(i);
+
+			String opponentPiece = board.getCellPiece(opponentPieceCoords.x, opponentPieceCoords.y);
+			if (!Pathing.getAllowableMoves(opponentPieceCoords.x, opponentPieceCoords.y, opponentPlayer, opponentPiece,
+					true, board).isEmpty()) {
+
+				stalemate = false;
+				break;
+			}
+
+		}
+
+		if (stalemate) {
+			return true;
+
+		} else {
+			return false;
+		}
+
 	}
 
 }

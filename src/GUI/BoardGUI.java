@@ -30,7 +30,7 @@ public class BoardGUI extends JPanel {
 	 */
 
 	public BoardGUI() {
-		JFrame frame = new JFrame("Chess test");
+		JFrame frame = new JFrame("Chess");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		ChessWindow window = new ChessWindow();

@@ -407,12 +407,18 @@ public class Board implements Serializable {
 		playerTwoKingCoords = coords;
 	}
 
-	public Point getPlayerOneKingCoords() {
-		return playerOneKingCoords;
-	}
+	public Point getKingCoords(int player) {
+		Point kingCoords = new Point();
+		switch (player) {
+		case 1:
+			kingCoords = playerOneKingCoords;
+			break;
 
-	public Point getPlayerTwoKingCoords() {
-		return playerTwoKingCoords;
+		case 2:
+			kingCoords = playerTwoKingCoords;
+			break;
+		}
+		return kingCoords;
 	}
 
 	public ArrayList<Point> getPlayerPiecesCoords(int player) {
