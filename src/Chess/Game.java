@@ -130,6 +130,18 @@ public class Game {
 								new Point(previouslySelectedX, previouslySelectedY));
 						board.removePlayerPiecesCoords(selectedPlayer, new Point(selectedX, selectedY));
 						board.addPlayerPiecesCoords(previouslySelectedPlayer, new Point(selectedX, selectedY));
+						
+						// amending the 50 move rule and seeing if they have surpassed it
+						if (selectedPiece == null && !previouslySelectedPiece.equals("Pawn")) {
+							controller.incrementFiftyMoveRulesMoves();
+						} else {
+							controller.resetFiftyMoveRulesMoves();
+						}
+						
+						if (controller.getFiftyMoveRulesMoves() > 49) {
+							BoardGUI.showMessage("50 move rule reached - tie game!");
+							controller.setGameComplete(true);
+						}
 
 						// checking next possible moves of piece in case of check
 						ArrayList<Point> newDangerousCoords = null;
@@ -228,6 +240,7 @@ public class Game {
 						 */
 						recalculateDangerAtCell(selectedX, selectedY, selectedCellDangerousCoords);
 						recalculateDangerAtCell(previouslySelectedX, previouslySelectedY, previousCellDangerousCoords);
+						
 
 						// checking if opponent is in checkmate
 
@@ -387,6 +400,8 @@ public class Game {
 				}
 			}
 		}
+		
+		System.out.println("Fifty move rule: " + controller.getFiftyMoveRulesMoves());
 
 	}
 

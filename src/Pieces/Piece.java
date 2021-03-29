@@ -1,7 +1,5 @@
 package Pieces;
 
-import java.awt.Point;
-
 import Chess.Game;
 
 public abstract class Piece {

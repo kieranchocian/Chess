@@ -13,6 +13,10 @@ import Pieces.Bishop;
 
 public class Board implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<ArrayList<Cell>> board = new ArrayList<ArrayList<Cell>>();
 	private Point playerOneKingCoords = new Point();
 	private Point playerTwoKingCoords = new Point();

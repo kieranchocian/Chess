@@ -987,8 +987,6 @@ public abstract class Pathing {
 						dangerousPieceAllowableCoordPotentialDangerousY);
 
 				ArrayList<Point> dangerousPieceAllowableCoordPotentialDangerousPieceAllowableCoords = null;
-				Point currentCoords = new Point(dangerousPieceAllowableCoordPotentialDangerousX,
-						dangerousPieceAllowableCoordPotentialDangerousY);
 
 				if (dangerousPieceAllowableCoordPotentialDangerousPiece != null) {
 

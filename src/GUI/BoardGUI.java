@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,6 +24,10 @@ import Chess.Game;
 
 public class BoardGUI extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton btn;
 	private Map<Point, JButton> mapButtons;
 
@@ -34,12 +40,31 @@ public class BoardGUI extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		ChessWindow window = new ChessWindow();
-		frame.add(window);
+		
+		// adding a new component that keeps the chess board square when user resizes
+		JPanel squareComponent = new JPanel();
+		squareComponent.add(window);
+		squareComponent.setSize(new Dimension(800, 800));
+		squareComponent.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				resize(window, squareComponent);
+			}
+		});
 
+		frame.add(squareComponent);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
+	}
+
+	private static void resize(ChessWindow window, JPanel squareComponent) {
+		int width = squareComponent.getWidth();
+		int height = squareComponent.getHeight();
+		int size = Math.min(width, height);
+		window.setPreferredSize(new Dimension(size, size));
+		squareComponent.revalidate();
 	}
 
 	public void changeCellPiece(int x, int y, String pieceLocation) {
@@ -99,6 +124,10 @@ public class BoardGUI extends JPanel {
 	// This allows me to have a different layout for the grid and the overall frame
 	public class ChessWindow extends JPanel implements ActionListener {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private GridBagConstraints gbc = new GridBagConstraints();
 
 		public ChessWindow() {
@@ -149,5 +178,6 @@ public class BoardGUI extends JPanel {
 			System.out.println("Dangerous cells at (" + x + ", " + y + "): " + Game.getBoard().getDangerousCells(x, y));
 			Game.actionPerformed(x, y);
 		}
+
 	}
 }

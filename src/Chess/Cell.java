@@ -7,8 +7,10 @@ import java.util.LinkedHashSet;
 
 public class Cell implements Serializable {
 
-	private int x;
-	private int y;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int player;
 	private String piece;
 	private boolean empty;
@@ -17,8 +19,6 @@ public class Cell implements Serializable {
 
 	public Cell(int x, int y, int player, String piece, ArrayList<Point> potentialDangerousCells,
 			ArrayList<Point> dangerousCells) {
-		this.x = x;
-		this.y = y;
 		this.player = player;
 		this.empty = false;
 		this.piece = piece;
@@ -28,8 +28,6 @@ public class Cell implements Serializable {
 
 	public Cell(int x, int y, ArrayList<Point> potentialDangerousCells,
 			ArrayList<Point> dangerousCells) {
-		this.x = x;
-		this.y = y;
 		this.empty = true;
 		this.potentialDangerousCells = potentialDangerousCells;
 		this.dangerousCells = new LinkedHashSet<Point>(dangerousCells);
@@ -37,8 +35,6 @@ public class Cell implements Serializable {
 	}
 
 	public Cell(int x, int y, int player, String piece) {
-		this.x = x;
-		this.y = y;
 		this.player = player;
 		this.piece = piece;
 		this.empty = false;
@@ -46,8 +42,6 @@ public class Cell implements Serializable {
 	}
 
 	public Cell(int x, int y) {
-		this.x = x;
-		this.y = y;
 		this.empty = true;
 	}
 

@@ -3,6 +3,7 @@ package Chess;
 public class Controller {
 
 	private int playerTurn;
+	private int fiftyMoveRulesMoves = 0;
 	private boolean playerOneCheck;
 	private boolean playerTwoCheck;
 	private boolean gameComplete;
@@ -60,5 +61,18 @@ public class Controller {
 	public void setGameComplete(boolean gameComplete) {
 		this.gameComplete = gameComplete;
 	}
+	
+	public int getFiftyMoveRulesMoves() {
+		return fiftyMoveRulesMoves;
+	}
+
+	public void incrementFiftyMoveRulesMoves() {
+		this.fiftyMoveRulesMoves = this.fiftyMoveRulesMoves + 1;
+	}
+	
+	public void resetFiftyMoveRulesMoves() {
+		this.fiftyMoveRulesMoves = 0;
+	}
+	
 
 }
