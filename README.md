@@ -6,7 +6,7 @@ Notes:
 -Visual assets (pieces) taken from https://github.com/anneomcl/ChessLibrary
 
 Required updates:
--Players should tie if either the 50 move threshold or threefold repetition is reached
+-Players should tie if threefold repetition is reached
 -Add castling
 
 Possible updates:
