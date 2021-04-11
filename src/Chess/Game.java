@@ -16,7 +16,6 @@ public class Game {
 
 	private static Board board;
 	private static BoardGUI window;
-	private static Controller controller;
 	private static ArrayList<Point> allowableCoords = new ArrayList<Point>();
 	private static ArrayList<Point> previousDangerousCoords = new ArrayList<Point>();
 	private static ArrayList<Point> previousPotentialDangerousCoords = new ArrayList<Point>();
@@ -36,23 +35,10 @@ public class Game {
 		System.out.println("Dangerous cells added");
 		board.changePlayerOneKingCoords(4, 0);
 		board.changePlayerTwoKingCoords(4, 7);
-		controller = new Controller();
 	}
 
 	public static Board getBoard() {
 		return board;
-	}
-
-	public static String getBoardPiece(int x, int y) {
-		return board.getCellPiece(x, y);
-	}
-
-	public static int getBoardPlayer(int x, int y) {
-		return board.getCellPlayer(x, y);
-	}
-
-	public static boolean getBoardEmpty(int x, int y) {
-		return board.isCellEmpty(x, y);
 	}
 
 	public static void changeBoardGUICellColour(int x, int y, Color colour) {
@@ -72,7 +58,7 @@ public class Game {
 
 	public static void changeBoardCell(int x, int y, int player, String piece, String pieceLocation,
 			ArrayList<Point> potentialDangerousCells, ArrayList<Point> dangerousCells) {
-		board.changeCell(x, y, player, piece, potentialDangerousCells, dangerousCells);
+		board.changeCell(x, y, player, piece, potentialDangerousCells, dangerousCells, true);
 		changeBoardGUICellPiece(x, y, pieceLocation);
 	}
 
@@ -80,6 +66,10 @@ public class Game {
 			ArrayList<Point> dangerousCells) {
 		board.removeCell(x, y, potentialDangerousCells, dangerousCells);
 		changeBoardGUICellPiece(x, y, "null");
+	}
+
+	public static boolean isPlayerInCheck(int player) {
+		return board.getController().isPlayerInCheck(player);
 	}
 
 	public static void showMessage(String message) {
@@ -91,56 +81,92 @@ public class Game {
 		System.out.println("Player one pieces: " + board.getPlayerPiecesCoords(1));
 		System.out.println("Player two pieces: " + board.getPlayerPiecesCoords(2));
 
-		int selectedPlayer = getBoardPlayer(selectedX, selectedY);
-		String selectedPiece = getBoardPiece(selectedX, selectedY);
-		boolean isEmpty = Game.getBoardEmpty(selectedX, selectedY);
+		int selectedPlayer = board.getCellPlayer(selectedX, selectedY);
+		String selectedPiece = board.getCellPiece(selectedX, selectedY);
+		boolean isEmpty = board.isCellEmpty(selectedX, selectedY);
 		boolean continueOn = true;
 
 		System.out.println("player selected: " + selectedPlayer);
 
-		if (controller.isGameComplete() == false) {
+		if (board.getController().isGameComplete() == false) {
 
 			if (piecePreviouslySelected) {
 
 				// user wants to move previously-selected piece into selected cell
 
 				boolean pieceMoved = false;
+				boolean castlingLeft = false;
+				boolean castlingRight = false;
 
 				for (int i = 0; i < allowableCoords.size(); i++) {
 					if (allowableCoords.get(i).x == selectedX && allowableCoords.get(i).y == selectedY) {
 
 						// piece is allowed to move into selected cell
 
-						selectedPiece = board.getCellPiece(selectedX, selectedY);
-						selectedPlayer = board.getCellPlayer(selectedX, selectedY);
+						// getting cell's dangerous coords pre-update
 
-						ArrayList<Point> selectedCellDangerousCoords = board.getDangerousCells(selectedX, selectedY);
 						ArrayList<Point> previousCellDangerousCoords = board.getDangerousCells(previouslySelectedX,
 								previouslySelectedY);
+						ArrayList<Point> selectedCellDangerousCoords = board.getDangerousCells(selectedX, selectedY);
+
+						// getting pre-update information for castling
+
+						ArrayList<Point> castleOldCellDangerousCoords = new ArrayList<Point>();
+						ArrayList<Point> castleNewCellDangerousCoords = new ArrayList<Point>();
+						String castlePieceLocation = null;
+						ArrayList<Point> castleOldDangerousCoords = new ArrayList<Point>();
+						ArrayList<Point> castleOldPotentialDangerousCoords = new ArrayList<Point>();
+						ArrayList<Point> castleNewDangerousCoords = new ArrayList<Point>();
+						ArrayList<Point> castleNewPotentialDangerousCoords = new ArrayList<Point>();
+
+						if (previouslySelectedPiece.equals("King") && selectedX == previouslySelectedX - 2) {
+							castlingLeft = true;
+							castleNewCellDangerousCoords = board.getDangerousCells(3, previouslySelectedY);
+							castleOldCellDangerousCoords = board.getDangerousCells(0, previouslySelectedY);
+							Castle castledCastle = new Castle(3, previouslySelectedY, previouslySelectedPlayer);
+							castlePieceLocation = castledCastle.pieceLocation;
+							castleOldDangerousCoords = castledCastle.getDangerousMoves(board);
+							castleOldPotentialDangerousCoords = castledCastle.getPotentialDangerousMoves(board);
+						}
+
+						if (previouslySelectedPiece.equals("King") && selectedX == previouslySelectedX + 2) {
+							castlingRight = true;
+							castleNewCellDangerousCoords = board.getDangerousCells(5, previouslySelectedY);
+							castleOldCellDangerousCoords = board.getDangerousCells(7, previouslySelectedY);
+							Castle castledCastle = new Castle(5, previouslySelectedY, previouslySelectedPlayer);
+							castlePieceLocation = castledCastle.pieceLocation;
+							castleOldDangerousCoords = castledCastle.getDangerousMoves(board);
+							castleOldPotentialDangerousCoords = castledCastle.getPotentialDangerousMoves(board);
+						}
 
 						// changing board to reflect the piece's move
-						changeBoardCell(selectedX, selectedY, previouslySelectedPlayer, previouslySelectedPiece,
-								previousPieceSelectedLocation, board.getPotentialDangerousCells(selectedX, selectedY),
-								board.getDangerousCells(selectedX, selectedY));
-						removeBoardCell(previouslySelectedX, previouslySelectedY,
-								board.getPotentialDangerousCells(previouslySelectedX, previouslySelectedY),
-								board.getDangerousCells(previouslySelectedX, previouslySelectedY));
 
-						board.removePlayerPiecesCoords(previouslySelectedPlayer,
-								new Point(previouslySelectedX, previouslySelectedY));
-						board.removePlayerPiecesCoords(selectedPlayer, new Point(selectedX, selectedY));
-						board.addPlayerPiecesCoords(previouslySelectedPlayer, new Point(selectedX, selectedY));
-						
+						updateBoardPiece(previouslySelectedX, previouslySelectedY, previouslySelectedPiece,
+								previousPieceSelectedLocation, selectedX, selectedY, previouslySelectedPlayer,
+								selectedPlayer);
+
+						// changing board to reflect castle moving if castling
+
+						if (castlingLeft) {
+							updateBoardPiece(0, previouslySelectedY, "Castle", castlePieceLocation, 3,
+									previouslySelectedY, previouslySelectedPlayer, previouslySelectedPlayer);
+						}
+
+						if (castlingRight) {
+							updateBoardPiece(7, previouslySelectedY, "Castle", castlePieceLocation, 5,
+									previouslySelectedY, previouslySelectedPlayer, previouslySelectedPlayer);
+						}
+
 						// amending the 50 move rule and seeing if they have surpassed it
 						if (selectedPiece == null && !previouslySelectedPiece.equals("Pawn")) {
-							controller.incrementFiftyMoveRulesMoves();
+							board.getController().incrementFiftyMoveRulesMoves();
 						} else {
-							controller.resetFiftyMoveRulesMoves();
+							board.getController().resetFiftyMoveRulesMoves();
 						}
-						
-						if (controller.getFiftyMoveRulesMoves() > 49) {
+
+						if (board.getController().getFiftyMoveRulesMoves() > 49) {
 							BoardGUI.showMessage("50 move rule reached - tie game!");
-							controller.setGameComplete(true);
+							board.getController().setGameComplete(true);
 						}
 
 						// checking next possible moves of piece in case of check
@@ -165,6 +191,14 @@ public class Game {
 							checkForCheck(bishop.getPossibleMoves(false, Game.getBoard()), previouslySelectedPlayer);
 							break;
 
+						case "Knight":
+							Knight knight = new Knight(selectedX, selectedY, previouslySelectedPlayer);
+							knight.setPieceGUI();
+							newDangerousCoords = knight.getDangerousMoves(Game.getBoard());
+							newPotentialDangerousCoords = knight.getPotentialDangerousMoves(Game.getBoard());
+							checkForCheck(knight.getPossibleMoves(false, Game.getBoard()), previouslySelectedPlayer);
+							break;
+
 						case "Queen":
 							Queen queen = new Queen(selectedX, selectedY, previouslySelectedPlayer);
 							queen.setPieceGUI();
@@ -178,12 +212,31 @@ public class Game {
 							king.setPieceGUI();
 							newDangerousCoords = king.getDangerousMoves(Game.getBoard());
 							newPotentialDangerousCoords = king.getPotentialDangerousMoves(Game.getBoard());
-							checkForCheck(king.getPossibleMoves(false, Game.getBoard()), previouslySelectedPlayer);
+							checkForCheck(king.getPossibleMoves(false, false, Game.getBoard()),
+									previouslySelectedPlayer);
+							// kingInCheck is false in the getPossibleMoves parameters as it doesn't matter
+							// here. It won't have updated though
 
 							if (previouslySelectedPlayer == 1) {
 								board.changePlayerOneKingCoords(selectedX, selectedY);
 							} else if (previouslySelectedPlayer == 2) {
 								board.changePlayerTwoKingCoords(selectedX, selectedY);
+							}
+							
+							if (castlingLeft) {
+								Castle castledCastle = new Castle(3, previouslySelectedY, previouslySelectedPlayer);
+								castledCastle.setPieceGUI();
+								castleNewDangerousCoords = castledCastle.getDangerousMoves(Game.getBoard());
+								castleNewPotentialDangerousCoords = castledCastle.getPotentialDangerousMoves(Game.getBoard());
+								checkForCheck(castledCastle.getPossibleMoves(false, Game.getBoard()), previouslySelectedPlayer);
+							}
+							
+							if (castlingRight) {
+								Castle castledCastle = new Castle(5, previouslySelectedY, previouslySelectedPlayer);
+								castledCastle.setPieceGUI();
+								castleNewDangerousCoords = castledCastle.getDangerousMoves(Game.getBoard());
+								castleNewPotentialDangerousCoords = castledCastle.getPotentialDangerousMoves(Game.getBoard());
+								checkForCheck(castledCastle.getPossibleMoves(false, Game.getBoard()), previouslySelectedPlayer);
 							}
 
 							break;
@@ -214,37 +267,29 @@ public class Game {
 							}
 							break;
 
-						case "Knight":
-							Knight knight = new Knight(selectedX, selectedY, previouslySelectedPlayer);
-							knight.setPieceGUI();
-							newDangerousCoords = knight.getDangerousMoves(Game.getBoard());
-							newPotentialDangerousCoords = knight.getPotentialDangerousMoves(Game.getBoard());
-							checkForCheck(knight.getPossibleMoves(false, Game.getBoard()), previouslySelectedPlayer);
-							break;
-
 						}
 
-						// removing danger created by piece in old position
-						board.removeEndangeredCells(previouslySelectedX, previouslySelectedY, previousDangerousCoords);
-						board.removePotentialEndangeredCells(previouslySelectedX, previouslySelectedY,
-								previousPotentialDangerousCoords);
+						// updating the danger and potential danger caused by movement
 
-						// adding danger created by piece in new position
-						board.addEndangeredCells(selectedX, selectedY, newDangerousCoords);
-						board.addPotentialEndangeredCells(selectedX, selectedY, newPotentialDangerousCoords);
-
-						/*
-						 * taking the pieces that were dangerous to the new and old cells, and
-						 * recalculating their danger to other cells. This is done because a piece
-						 * moving alters where other pieces can go
-						 */
-						recalculateDangerAtCell(selectedX, selectedY, selectedCellDangerousCoords);
-						recalculateDangerAtCell(previouslySelectedX, previouslySelectedY, previousCellDangerousCoords);
+						updateBoardDanger(previouslySelectedX, previouslySelectedY, previousDangerousCoords,
+								previousPotentialDangerousCoords, selectedX, selectedY, newDangerousCoords,
+								newPotentialDangerousCoords, previousCellDangerousCoords, selectedCellDangerousCoords);
 						
+						if (castlingLeft) {
+							updateBoardDanger(0, previouslySelectedY, castleOldDangerousCoords,
+									castleOldPotentialDangerousCoords, 3, previouslySelectedY, castleNewDangerousCoords,
+									castleNewPotentialDangerousCoords, castleOldCellDangerousCoords, castleNewCellDangerousCoords);
+						}
+
+						if (castlingRight) {
+							updateBoardDanger(7, previouslySelectedY, castleOldDangerousCoords,
+									castleOldPotentialDangerousCoords, 5, previouslySelectedY, castleNewDangerousCoords,
+									castleNewPotentialDangerousCoords, castleOldCellDangerousCoords, castleNewCellDangerousCoords);
+						}
 
 						// checking if opponent is in checkmate
 
-						if (controller.isPlayerInCheck(1)) {
+						if (board.getController().isPlayerInCheck(1)) {
 
 							Point selectedCoords = new Point();
 							selectedCoords.x = selectedX;
@@ -252,13 +297,13 @@ public class Game {
 
 							if (Pathing.isCheckmate(board.getKingCoords(1), selectedCoords, 1, board)) {
 								BoardGUI.showMessage("Checkmate - player 2 wins!");
-								controller.setGameComplete(true);
+								board.getController().setGameComplete(true);
 							} else {
 								System.out.println("Not checkmate");
 							}
 						}
 
-						if (controller.isPlayerInCheck(2)) {
+						if (board.getController().isPlayerInCheck(2)) {
 
 							Point selectedCoords = new Point();
 							selectedCoords.x = selectedX;
@@ -266,31 +311,29 @@ public class Game {
 
 							if (Pathing.isCheckmate(board.getKingCoords(2), selectedCoords, 2, board)) {
 								BoardGUI.showMessage("Checkmate - player 1 wins!");
-								controller.setGameComplete(true);
+								board.getController().setGameComplete(true);
 							} else {
 								System.out.println("Not checkmate");
 							}
 						}
 
 						// checking if players are in stalemate
-						if (!controller.isGameComplete()) {
+						if (!board.getController().isGameComplete()) {
 							if (checkForStalemate(previouslySelectedPlayer, board)) {
 								BoardGUI.showMessage("Stalemate - tie game!");
-								controller.setGameComplete(true);
+								board.getController().setGameComplete(true);
 							}
 						}
 
 						// changing player turn
 
 						if (previouslySelectedPlayer == 1) {
-							controller.setPlayerTurn(2);
+							board.getController().setPlayerTurn(2);
 						} else if (previouslySelectedPlayer == 2) {
-							controller.setPlayerTurn(1);
+							board.getController().setPlayerTurn(1);
 						}
 						pieceMoved = true;
 						continueOn = false;
-
-						// TODO: check for a draw
 
 					}
 
@@ -324,7 +367,7 @@ public class Game {
 
 					// no piece was previously selected so the user wants to move selected cell
 
-					if (selectedPlayer == controller.getPlayerTurn()) {
+					if (selectedPlayer == board.getController().getPlayerTurn()) {
 						if (!isEmpty) {
 
 							// selecting piece to move and displaying possible moves
@@ -360,7 +403,8 @@ public class Game {
 
 							case "King":
 								King king = new King(selectedX, selectedY, selectedPlayer);
-								allowableCoords = king.getPossibleMoves(true, Game.getBoard());
+								allowableCoords = king.getPossibleMoves(
+										board.getController().isPlayerInCheck(selectedPlayer), true, Game.getBoard());
 								System.out.println("Allowable coords for " + selectedPiece + ": " + allowableCoords);
 								previousPieceSelectedLocation = king.pieceLocation;
 								previousDangerousCoords = king.getDangerousMoves(Game.getBoard());
@@ -400,8 +444,12 @@ public class Game {
 				}
 			}
 		}
-		
-		System.out.println("Fifty move rule: " + controller.getFiftyMoveRulesMoves());
+
+		System.out.println("Fifty move rule: " + board.getController().getFiftyMoveRulesMoves());
+
+		if (selectedPiece != null) {
+			System.out.println("Has piece been moved? " + board.hasPieceMoved(selectedX, selectedY));
+		}
 
 	}
 
@@ -420,8 +468,8 @@ public class Game {
 
 			int xCoord = dangerousCoordsAtPoint.get(i).x;
 			int yCoord = dangerousCoordsAtPoint.get(i).y;
-			int player = getBoardPlayer(xCoord, yCoord);
-			String piece = getBoardPiece(xCoord, yCoord);
+			int player = board.getCellPlayer(xCoord, yCoord);
+			String piece = board.getCellPiece(xCoord, yCoord);
 			ArrayList<Point> dangerousCoords = null;
 			ArrayList<Point> potentialCoords = null;
 
@@ -495,6 +543,43 @@ public class Game {
 		}
 	}
 
+	public static void updateBoardPiece(int previousX, int previousY, String pieceName, String pieceIconLocation,
+			int newX, int newY, int player, int previousPlayer) {
+
+		changeBoardCell(newX, newY, player, pieceName, pieceIconLocation, board.getPotentialDangerousCells(newX, newY),
+				board.getDangerousCells(newX, newY));
+		removeBoardCell(previousX, previousY, board.getPotentialDangerousCells(previousX, previousY),
+				board.getDangerousCells(previousX, previousY));
+
+		board.removePlayerPiecesCoords(player, new Point(previousX, previousY));
+		board.addPlayerPiecesCoords(player, new Point(newX, newY));
+
+		board.removePlayerPiecesCoords(previousPlayer, new Point(newX, newY));
+
+	}
+
+	public static void updateBoardDanger(int previousX, int previousY, ArrayList<Point> previousPieceDangerousCoords,
+			ArrayList<Point> previousPiecePotentialDangerousCoords, int newX, int newY,
+			ArrayList<Point> newPieceDangerousCoords, ArrayList<Point> newPiecePotentialDangerousCoords,
+			ArrayList<Point> previousCoordsDangerousCoords, ArrayList<Point> newCoordsDangerousCoords) {
+
+		// removing danger created by piece in old position
+		board.removeEndangeredCells(previousX, previousY, previousPieceDangerousCoords);
+		board.removePotentialEndangeredCells(previousX, previousY, previousPiecePotentialDangerousCoords);
+
+		// adding danger created by piece in new position
+		board.addEndangeredCells(newX, newY, newPieceDangerousCoords);
+		board.addPotentialEndangeredCells(newX, newY, newPiecePotentialDangerousCoords);
+
+		/*
+		 * taking the pieces that were dangerous to the new and old cells, and
+		 * recalculating their danger to other cells. This is done because a piece
+		 * moving alters where other pieces can go
+		 */
+		recalculateDangerAtCell(newX, newY, newCoordsDangerousCoords);
+		recalculateDangerAtCell(previousY, previousY, previousCoordsDangerousCoords);
+	}
+
 	/*
 	 * This method takes a piece's allowable coordinates and checks if the
 	 * opponent's king is within them. if so, the opponent is in check. It is used
@@ -521,13 +606,13 @@ public class Game {
 				switch (player) {
 
 				case 1:
-					controller.setPlayerCheck(2, true);
+					board.getController().setPlayerCheck(2, true);
 					check = true;
 					BoardGUI.showMessage("Player 2 is in check!");
 					break;
 
 				case 2:
-					controller.setPlayerCheck(1, true);
+					board.getController().setPlayerCheck(1, true);
 					check = true;
 					BoardGUI.showMessage("Player 1 is in check!");
 					break;
@@ -538,8 +623,8 @@ public class Game {
 		}
 
 		if (check == false) {
-			controller.setPlayerCheck(1, false);
-			controller.setPlayerCheck(2, false);
+			board.getController().setPlayerCheck(1, false);
+			board.getController().setPlayerCheck(2, false);
 		}
 	}
 

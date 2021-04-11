@@ -1,12 +1,14 @@
 package Chess;
 
-public class Controller {
+import java.io.Serializable;
+
+public class Controller implements Serializable{
 
 	private int playerTurn;
 	private int fiftyMoveRulesMoves = 0;
-	private boolean playerOneCheck;
-	private boolean playerTwoCheck;
-	private boolean gameComplete;
+	private boolean playerOneCheck = false;
+	private boolean playerTwoCheck = false;
+	private boolean gameComplete = false;
 	
 	public Controller() {
 		setGameComplete(false);

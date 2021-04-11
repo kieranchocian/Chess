@@ -11,7 +11,6 @@ public class Pawn extends Piece {
 	private ArrayList<Point> potentialDangerousMoves = new ArrayList<Point>();
 	private ArrayList<Point> allowableMoves = new ArrayList<Point>();
 	private ArrayList<Point> dangerousMoves = new ArrayList<Point>();
-	private boolean hasMoved;
 	private String direction;
 
 	public Pawn(int x, int y, int player) {
@@ -58,16 +57,10 @@ public class Pawn extends Piece {
 			}
 			break;
 		}
-
-		if ((y == 1 && player == 1) || (y == 6 && player == 2)) {
-			hasMoved = false;
-		} else {
-			hasMoved = true;
-		}
 	}
 
 	public ArrayList<Point> getPossibleMoves(boolean checkForKingCheck, Board board) {
-		allowableMoves = Pathing.getAllowablePawnMoves(x, y, potentialDangerousMoves, player, hasMoved, direction, board);
+		allowableMoves = Pathing.getAllowablePawnMoves(x, y, potentialDangerousMoves, player, direction, board);
 
 		if (checkForKingCheck == true) {
 			

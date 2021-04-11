@@ -16,6 +16,7 @@ public class Board implements Serializable {
 	/**
 	 * 
 	 */
+	private Controller controller = new Controller();
 	private static final long serialVersionUID = 1L;
 	private ArrayList<ArrayList<Cell>> board = new ArrayList<ArrayList<Cell>>();
 	private Point playerOneKingCoords = new Point();
@@ -289,6 +290,10 @@ public class Board implements Serializable {
 			}
 		}
 	}
+	
+	public Controller getController() {
+		return controller;
+	}
 
 	public int getCellPlayer(int x, int y) {
 		return board.get(y).get(x).getPlayer();
@@ -322,9 +327,9 @@ public class Board implements Serializable {
 	}
 
 	public void changeCell(int x, int y, int player, String piece, ArrayList<Point> potentialDangerousCell,
-			ArrayList<Point> dangerousCells) {
+			ArrayList<Point> dangerousCells, boolean hasMoved) {
 
-		Cell cell = new Cell(x, y, player, piece, potentialDangerousCell, dangerousCells);
+		Cell cell = new Cell(x, y, player, piece, potentialDangerousCell, dangerousCells, hasMoved);
 		board.get(y).set(x, cell);
 
 	}
@@ -462,6 +467,11 @@ public class Board implements Serializable {
 			break;
 		}
 
+	}
+	
+	public boolean hasPieceMoved(int x, int y) {
+		return board.get(y).get(x).hasPieceMoved();	
+		
 	}
 
 }

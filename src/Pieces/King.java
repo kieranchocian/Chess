@@ -22,11 +22,15 @@ public class King extends Piece {
 		}
 	}
 
-	public ArrayList<Point> getPossibleMoves(boolean checkForKingCheck, Board board) {
+	public ArrayList<Point> getPossibleMoves(boolean kingInCheck, boolean checkForKingCheck, Board board) {
 		ArrayList<Point> allowableCoords = new ArrayList<Point>();
 
 		allowableCoords = Pathing.getAllowableDiagonalMoves(x, y, player, false, board);
 		allowableCoords.addAll(Pathing.getAllowableVerticalAndHorizontalMoves(x, y, player, false, board));
+		
+		if (!kingInCheck) {
+			allowableCoords = Pathing.checkForCastling(x, y, player, allowableCoords, board);
+		}
 
 		System.out.println("Allowable coords before checking for check status: " + allowableCoords);
 

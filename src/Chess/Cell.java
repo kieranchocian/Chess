@@ -14,16 +14,18 @@ public class Cell implements Serializable {
 	private int player;
 	private String piece;
 	private boolean empty;
+	private boolean hasMoved;
 	private ArrayList<Point> potentialDangerousCells = new ArrayList<Point>();
 	private LinkedHashSet<Point> dangerousCells = new LinkedHashSet<Point>();
 
 	public Cell(int x, int y, int player, String piece, ArrayList<Point> potentialDangerousCells,
-			ArrayList<Point> dangerousCells) {
+			ArrayList<Point> dangerousCells, boolean hasMoved) {
 		this.player = player;
 		this.empty = false;
 		this.piece = piece;
 		this.potentialDangerousCells = potentialDangerousCells;
 		this.dangerousCells = new LinkedHashSet<Point>(dangerousCells);
+		this.hasMoved = hasMoved;
 	}
 
 	public Cell(int x, int y, ArrayList<Point> potentialDangerousCells,
@@ -31,7 +33,6 @@ public class Cell implements Serializable {
 		this.empty = true;
 		this.potentialDangerousCells = potentialDangerousCells;
 		this.dangerousCells = new LinkedHashSet<Point>(dangerousCells);
-		;
 	}
 
 	public Cell(int x, int y, int player, String piece) {
@@ -39,6 +40,7 @@ public class Cell implements Serializable {
 		this.piece = piece;
 		this.empty = false;
 		this.piece = piece;
+		this.hasMoved = false;
 	}
 
 	public Cell(int x, int y) {
@@ -91,6 +93,10 @@ public class Cell implements Serializable {
 		dangerousCell.x = dangerousCellX;
 		dangerousCell.y = dangerousCellY;
 		dangerousCells.remove(dangerousCell);
+	}
+	
+	public boolean hasPieceMoved() {
+		return hasMoved;
 	}
 
 }

@@ -585,7 +585,7 @@ public abstract class Pathing {
 	 */
 
 	public static ArrayList<Point> getAllowablePawnMoves(int x, int y, ArrayList<Point> potentialMoves, int player,
-			boolean hasMoved, String direction, Board board) {
+			String direction, Board board) {
 
 		Point currentCoords = new Point();
 		ArrayList<Point> allowableCoords = new ArrayList<Point>();
@@ -611,7 +611,7 @@ public abstract class Pathing {
 					// checking pawn move of 2 squares forward
 
 					if ((yCoord == y + 2 && xCoord == x) || (yCoord == y - 2 && xCoord == x)) {
-						if (hasMoved == false) {
+						if (board.hasPieceMoved(x, y) == false) {
 							if (!opponentPiece) {
 								// making sure the move is not obstructed
 								switch (direction) {
@@ -645,6 +645,47 @@ public abstract class Pathing {
 		}
 
 		return allowableCoords;
+	}
+
+	public static ArrayList<Point> checkForCastling(int x, int y, int player, ArrayList<Point> allowableMoves, Board board) {
+
+		if (!board.hasPieceMoved(x, y)) {
+
+			// the king has not moved - castling possibly allowed
+
+			if (!board.hasPieceMoved(x - 4, y)) {
+
+				// left castle has not moved - castling possibly allowed to the left
+
+				if (board.isCellEmpty(x - 3, y) && board.isCellEmpty(x - 2, y) && board.isCellEmpty(x - 1, y)) {
+
+					// route to castle is clear - castling allowed to the left
+					allowableMoves.add(new Point(x - 2, y));
+					
+				}
+
+			}
+			
+			if (!board.hasPieceMoved(x + 3, y)) {
+
+				// right castle has not moved - castling possibly allowed to the right
+
+				if (board.isCellEmpty(x + 1, y) && board.isCellEmpty(x + 2, y)) {
+
+					// route to castle is clear - castling allowed to the right
+					allowableMoves.add(new Point(x + 2, y));
+					
+				}
+
+			}
+
+		} else {
+			// the king has moved - castling not allowed
+			return allowableMoves;
+
+		}
+
+		return allowableMoves;
 	}
 
 	/*
@@ -715,7 +756,7 @@ public abstract class Pathing {
 			// changing temp board to reflect allowable move
 
 			tempBoard.changeCell(allowableX, allowableY, player, piece, allowableCellPotentialDangerousCells,
-					allowableCellDangerousCells);
+					allowableCellDangerousCells, true);
 			tempBoard.removeCell(startingX, startingY, startingCellPotentialDangerousCells, startingCellDangerousCells);
 
 			if (piece.equals("King")) {
@@ -734,7 +775,6 @@ public abstract class Pathing {
 
 			Point kingCoords = tempBoard.getKingCoords(player);
 			System.out.println("Temp board player " + player + " King coords: " + kingCoords);
-				
 
 			ArrayList<Point> kingPotentialDangerousCells = tempBoard.getPotentialDangerousCells(kingCoords.x,
 					kingCoords.y);
@@ -758,7 +798,8 @@ public abstract class Pathing {
 				if (kingPotentialDangerousPiece != null) {
 
 					kingPotentialDangerousPieceAllowableMoves = getAllowableMoves(kingPotentialDangerousX,
-							kingPotentialDangerousY, kingPotentialDangerousPlayer, kingPotentialDangerousPiece, false, tempBoard);
+							kingPotentialDangerousY, kingPotentialDangerousPlayer, kingPotentialDangerousPiece, false,
+							tempBoard);
 
 					// checking if the allowable moves from the king's potentially dangerous cell
 					// includes the player's king
@@ -799,7 +840,7 @@ public abstract class Pathing {
 
 		King king = new King(kingCoords.x, kingCoords.y, playerInCheck);
 
-		ArrayList<Point> kingAllowableMoves = king.getPossibleMoves(true, board);
+		ArrayList<Point> kingAllowableMoves = king.getPossibleMoves(true, true, board);
 		System.out.println(!kingAllowableMoves.isEmpty());
 
 		if (!kingAllowableMoves.isEmpty()) {
@@ -827,7 +868,8 @@ public abstract class Pathing {
 				ArrayList<Point> dangerousPieceDangerousPieceAllowableMoves = new ArrayList<Point>();
 
 				dangerousPieceDangerousPieceAllowableMoves = getAllowableMoves(dangerousPieceDangerousX,
-						dangerousPieceDangerousY, dangerousPieceDangerousPlayer, dangerousPieceDangerousPiece, true, board);
+						dangerousPieceDangerousY, dangerousPieceDangerousPlayer, dangerousPieceDangerousPiece, true,
+						board);
 
 				for (int j = 0; j < dangerousPieceDangerousPieceAllowableMoves.size(); j++) {
 					if (dangerousPieceDangerousPieceAllowableMoves.get(j).x == dangerousX
@@ -1038,7 +1080,8 @@ public abstract class Pathing {
 		return coordsMatch;
 	}
 
-	public static ArrayList<Point> getAllowableMoves(int x, int y, int player, String piece, boolean checkForKingCheck, Board board) {
+	public static ArrayList<Point> getAllowableMoves(int x, int y, int player, String piece, boolean checkForKingCheck,
+			Board board) {
 
 		ArrayList<Point> allowableMoves = new ArrayList<Point>();
 
@@ -1071,7 +1114,7 @@ public abstract class Pathing {
 
 		case "King":
 			King king = new King(x, y, player);
-			allowableMoves = king.getPossibleMoves(checkForKingCheck, board);
+			allowableMoves = king.getPossibleMoves(board.getController().isPlayerInCheck(player), checkForKingCheck, board);
 			break;
 		}
 
