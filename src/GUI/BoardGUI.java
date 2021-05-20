@@ -39,31 +39,87 @@ public class BoardGUI extends JPanel {
 		JFrame frame = new JFrame("Chess");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		ChessWindow window = new ChessWindow();
-		
 		// adding a new component that keeps the chess board square when user resizes
 		JPanel squareComponent = new JPanel();
-		squareComponent.add(window);
-		squareComponent.setSize(new Dimension(800, 800));
-		squareComponent.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-				resize(window, squareComponent);
-			}
-		});
+
+		JPanel innerPanel = new JPanel();
+		innerPanel.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		JButton btnUndo = new JButton();
+		btnUndo.setText("Undo");
+		btnUndo.setPreferredSize(new Dimension(400, 100));
+		btnUndo.setMinimumSize(new Dimension(400, 100));
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 0.1;
+		gbc.weighty = 0.1;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		innerPanel.add(btnUndo, gbc);
+
+		JButton btnRedo = new JButton();
+		btnRedo.setText("Redo");
+		btnRedo.setPreferredSize(new Dimension(400, 100));
+		btnRedo.setMinimumSize(new Dimension(400, 100));
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 0.1;
+		gbc.weighty = 0.1;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		innerPanel.add(btnRedo, gbc);
+
+		ChessWindow window = new ChessWindow();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridheight = 8;
+		gbc.gridwidth = 2;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		innerPanel.add(window, gbc);
+
+		squareComponent.add(innerPanel);
 
 		frame.add(squareComponent);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
+		squareComponent.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				resize(innerPanel, window, squareComponent);
+			}
+		});
+
 	}
 
-	private static void resize(ChessWindow window, JPanel squareComponent) {
+	private static void resize(JPanel innerPanel, ChessWindow window, JPanel squareComponent) {
 		int width = squareComponent.getWidth();
 		int height = squareComponent.getHeight();
-		int size = Math.min(width, height);
-		window.setPreferredSize(new Dimension(size, size));
+		System.out.println("Square component height: " + height);
+		System.out.println("Square component width: " + width);
+		double widthToHeightRatio = (double) width / height;
+		double standardWidthToHeightRatio = (double) 8 / 9;
+		System.out.println("widthToHeightRatio = " + widthToHeightRatio);
+		System.out.println("standardWidthToHeightRatio = " + standardWidthToHeightRatio);
+
+		if (widthToHeightRatio > standardWidthToHeightRatio) {
+			
+			System.out.println("Width is longer than standard ratio");
+			innerPanel.setPreferredSize(new Dimension(height / 9 * 8, height));
+			
+			System.out.println("New width: " + height / 9 * 8);
+			System.out.println("New height: " + height);
+			
+		} else if (widthToHeightRatio < standardWidthToHeightRatio){
+			
+			System.out.println("Height is longer than standard ratio");
+			innerPanel.setPreferredSize(new Dimension(width, width / 8 * 9));
+			
+			System.out.println("New width: " + width);
+			System.out.println("New height: " + width / 8 * 9);
+		}
 		squareComponent.revalidate();
 	}
 
@@ -145,6 +201,7 @@ public class BoardGUI extends JPanel {
 
 					btn = new JButton();
 					btn.setPreferredSize(new Dimension(100, 100));
+					btn.setMinimumSize(new Dimension(100, 100));
 					btn.setActionCommand(x + " " + convertYToNormal(y));
 					if ((x + y + 2) % 2 == 0) {
 						btn.setBackground(Color.WHITE);
