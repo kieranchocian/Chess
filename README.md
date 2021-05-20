@@ -7,7 +7,6 @@ Notes:
 
 Required updates:
 -Players should tie if threefold repetition is reached
--Add castling
 
 Possible updates:
 -Use stockfish engine to add single player mode
